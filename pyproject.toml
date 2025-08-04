@@ -1,0 +1,114 @@
+[project]
+name = "db-drift"
+version = "0.1.0"
+description = "A command line tool to visualize the differences between two DB states."
+readme = "README.md"
+authors = [
+    { name = "Hercules Konsoulas", email = "dyka3773@gmail.com" }
+]
+requires-python = ">=3.13"
+license = "MIT"
+keywords = [
+    "db-drift",
+    "database",
+    "diff",
+    "cli",
+    "command-line",
+    "visualization"
+]
+classifiers = [
+    "Development Status :: 3 - Alpha",
+    "Intended Audience :: Developers",
+    "License :: OSI Approved :: MIT License",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.13",
+    "Topic :: Software Development :: Build Tools",
+    "Topic :: Software Development :: Version Control",
+    "Topic :: Database",
+    "Topic :: Utilities",
+    "Typing :: Typed",
+]
+dependencies = [
+    "oracledb>=3.3.0",
+    "psycopg[binary]>=3.2.9",
+    "pymysql>=1.1.1",
+    "python-dotenv>=1.1.1",
+    "pyyaml>=6.0.2",
+    "sqlmodel>=0.0.24",
+    "sshtunnel>=0.4.0",
+]
+
+[project.urls]
+source = "https://github.com/dyka3773/db-drift"
+
+[project.scripts]
+db-drift = "db_drift:main"
+
+[dependency-groups]
+dev = [
+    "build>=1.3.0",
+    "git-changelog>=2.5.3",
+    "pytest>=8.4.1",
+    "python-semantic-release>=10.3.0",
+    "tox>=4.28.4",
+    "twine>=6.1.0",
+]
+
+[build-system]
+build-backend = 'hatchling.build'
+requires = ['hatchling']
+
+[tool.pytest.ini_options]
+pythonpath = ["src"]
+
+[tool.semantic_release]
+version_toml = ["pyproject.toml:project.version"]
+build_command = "pip install build && python -m build"
+dist_path = "dist/"
+upload_to_pypi = true
+upload_to_release = true
+remove_dist = false
+
+[tool.semantic_release.branches.main]
+match = "main"
+prerelease = false
+
+[tool.semantic_release.commit_parser_options]
+allowed_tags = ["build", "chore", "deps", "ci", "docs", "feat", "fix", "perf", "style", "refactor", "test"]
+minor_tags = ["feat"]
+patch_tags = ["fix", "perf"]
+
+[tool.git-changelog]
+convention = "conventional"
+template = "keepachangelog"
+sections = [
+    {type = "feat", section = "Features", scopes = []},
+    {type = "fix", section = "Bug Fixes", scopes = []},
+    {type = "refactor", section = "Code Refactoring", scopes = []},
+    {type = "perf", section = "Performance Improvements", scopes = []},
+    {type = "docs", section = "Documentation", scopes = []},
+    {type = "chore", section = "Miscellaneous Chores", scopes = []},
+    {type = "ci", section = "Continuous Integration", scopes = []},
+    {type = "build", section = "Build System", scopes = []},
+    {type = "test", section = "Tests", scopes = []},
+    {type = "style", section = "Style", scopes = []},
+    {type = "deps", section = "Dependencies", scopes = []},
+]
+
+[tool.tox]
+env_list = ["lint", "3.10", "3.11", "3.12", "3.13"]
+
+[tool.tox.env_run_base]
+description = "Run tests with the current Python version"
+deps = [
+    "pytest>=8.3.2",
+]
+commands = [[ "pytest", "-v" ]]
+
+[tool.tox.env.lint]
+description = "Lint the codebase with ruff"
+deps = [
+    "ruff>=0.12.3",
+]
+skip_install = true
+commands = [[ "ruff", "check", "src/", "tests/" ]]
