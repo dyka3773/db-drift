@@ -83,6 +83,7 @@ We use [Conventional Commits](https://www.conventionalcommits.org/) for commit m
 - `test`: Adding missing tests or correcting existing tests
 - `chore`: Changes to the build process or auxiliary tools
 - `ci`: Changes to CI configuration files and scripts
+- `deps`: Changes to dependencies
 
 **Examples:**
 ```bash
