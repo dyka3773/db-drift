@@ -6,7 +6,7 @@ readme = "README.md"
 authors = [
     { name = "Hercules Konsoulas", email = "dyka3773@gmail.com" }
 ]
-requires-python = ">=3.13"
+requires-python = ">=3.10"
 license = "MIT"
 keywords = [
     "db-drift",
