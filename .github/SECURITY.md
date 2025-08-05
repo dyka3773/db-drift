@@ -1,12 +1,14 @@
 # Security Policy
 
-## Supported Versions
+This project is still under active development, in a very early stage, the releases are not stable yet, and we are not ready to support security issues at this time. However, we take security seriously and will update this policy as the project matures.
+
+<!-- ## Supported Versions
 
 We actively support the following versions of db-drift:
 
 | Version | Supported          |
 | ------- | ------------------ |
-| 0.x.x   | :white_check_mark: |
+| 1.x.x   | :white_check_mark: | -->
 
 ## Reporting a Vulnerability
 

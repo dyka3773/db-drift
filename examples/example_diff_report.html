@@ -1,0 +1,414 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha2/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-aFq/bzH65dt+w6FI2ooMVUpc+21e0SRygnTpmBvdBgSdnuTN7QbdgL+OapgHtvPp" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha2/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-qKXV1j0HvMUeCBQ+QVp7JcfGl760yU08IQ+GpUo5hlbpg51QRiuqHAJz8+BrxE/N" crossorigin="anonymous">
+        </script>
+    <style type="text/css">
+        table {
+            /* This will make every table use its full width*/
+            margin: auto;
+            width: 100% !important;
+        }
+
+        .col {
+            /* This will vertically align all the columns */
+            vertical-align: middle !important;
+        }
+
+        th[colspan="2"],
+        td[colspan="2"] {
+            /* This will horizontally align the key columns like:
+            - The table headers
+            - Special cases like "REMOVED" and "NOT PRESENT" when referring to an object
+        */
+            text-align: center;
+        }
+
+        td>table {
+            /* This will make the tables inside the columns use their full size */
+            width: 100% !important;
+            height: 100% !important;
+        }
+
+        td>table>tbody>tr>td {
+            /* This will make the columns that are inside tables that are inside columns have a small padding*/
+            padding: 0.4rem !important;
+        }
+
+        td:has(> table) {
+            /* This will make the columns have a table inside them have no padding 
+        This enables us to use the table's colours in whole size of the column */
+            padding: 0 !important;
+        }
+
+        th {
+            /* This will make the table headers occupy 50% of the table each */
+            width: 50%;
+        }
+    </style>
+
+    <title>DB Diff Report</title>
+</head>
+
+<body>
+    <header class="navbar navbar-light bg-light">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="#">
+                Database Differences Report
+            </a>
+        </div>
+    </header>
+
+    <main class="container">
+
+        <div class="table-responsive">
+            <table class="table table-bordered caption-top">
+                <caption class="caption-top">
+                    <h5>TABLES</h5>
+                </caption>
+                <thead>
+                    <tr>
+                        <th class="col" colspan="2">
+                            <h5>Version: v1.0.0</h5>
+                        </th>
+                        <th class="col" colspan="2">
+                            <h5>Version: v1.1.0</h5>
+                        </th>
+                    </tr>
+                </thead>
+                <tbody>
+
+
+                    <tr>
+                        <td class="col bg-danger-subtle" colspan="2" style="text-align:center">TABLE_1</td>
+                        <td class="col" colspan="2">OBJECT HAS BEEN REMOVED</td>
+                    </tr>
+                    <tr>
+                        <td class="col  bg-danger-subtle" style="text-align:center">TABLE_2</td>
+                        <td class="col  bg-danger-subtle">
+                            <table class="table-borderless">
+                                <tr>
+                                    <td class="col">
+                                        COL1: TIMESTAMP(6)
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td class="col">
+                                        COL2: VARCHAR2
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td class="col">
+                                        COL3: VARCHAR2
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td class="col">
+                                        COL4: NUMBER
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td class="col">
+                                        COL5: VARCHAR2
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td class="col">
+                                        COL6: NUMBER
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td class="col">
+                                        COL7: VARCHAR2
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td class="col">
+                                        COL8: NUMBER
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td class="col">
+                                        COL9: NUMBER
+                                    </td>
+                                </tr>
+                            </table>
+                        </td>
+                        <td class="col" colspan="2">PROPERTIES WERE REMOVED</td>
+                    </tr>
+                    <tr>
+                        <td class="col" style="text-align:center">TABLE_3</td>
+                        <td class="col bg-warning-subtle">
+                            <table class="table-borderless">
+                                <tr>
+                                    <td class="col 
+                    bg-warning-subtle
+                    ">
+                                        <span class="badge bg-dark-subtle text-dark rounded-pill">documentation</span>
+                                        This is the previous documentation for TABLE_3.
+                                    </td>
+                                </tr>
+                            </table>
+                        </td>
+                        <td class="col" style="text-align:center">TABLE_3</td>
+                        <td class="col">
+                            <table class="table-borderless">
+                                <tr>
+                                    <td class="col 
+                    bg-warning-subtle
+                    ">
+                                        <span class="badge bg-dark-subtle text-dark rounded-pill">documentation</span>
+                                        This is the new documentation for TABLE_3.
+                                    </td>
+                                </tr>
+                            </table>
+                        </td>
+                    </tr>
+
+
+                </tbody>
+            </table>
+        </div>
+
+        <div class="table-responsive">
+            <table class="table table-bordered caption-top">
+                <caption class="caption-top">
+                    <h5>INDEXES</h5>
+                </caption>
+                <thead>
+                    <tr>
+                        <th class="col" colspan="2">
+                            <h5>Version: v1.0.0</h5>
+                        </th>
+                        <th class="col" colspan="2">
+                            <h5>Version: v1.1.0</h5>
+                        </th>
+                    </tr>
+                </thead>
+                <tbody>
+
+
+                    <tr>
+                        <td class="col  bg-danger-subtle" style="text-align:center">TABLE_1_PK</td>
+                        <td class="col  bg-danger-subtle">
+                            <table class="table-borderless">
+                                <tr>
+                                    <td class="col">
+                                        table: TABLE_1, columns: [COL1], uniqueness: UNIQUE, prefix_length:
+                                        None, tablespace: SOME_TABLESPACE
+                                    </td>
+                                </tr>
+                            </table>
+                        </td>
+                        <td class="col" colspan="2">OBJECT HAS BEEN REMOVED</td>
+                    </tr>
+                    <tr>
+                        <td class="col  bg-danger-subtle" style="text-align:center">TABLE4_COL1_UK</td>
+                        <td class="col  bg-danger-subtle">
+                            <table class="table-borderless">
+                                <tr>
+                                    <td class="col">
+                                        table: TABLE_4, columns: [COL1], uniqueness: UNIQUE, prefix_length: None,
+                                        tablespace: SOME_TABLESPACE
+                                    </td>
+                                </tr>
+                            </table>
+                        </td>
+                        <td class="col" colspan="2">OBJECT HAS BEEN REMOVED</td>
+                    </tr>
+                    <tr>
+                        <td class="col  bg-danger-subtle" style="text-align:center">TABLE4_COL2_IDX</td>
+                        <td class="col  bg-danger-subtle">
+                            <table class="table-borderless">
+                                <tr>
+                                    <td class="col">
+                                        table: TABLE_4, columns: [COL2], uniqueness: NONUNIQUE, prefix_length:
+                                        None, tablespace: SOME_TABLESPACE
+                                    </td>
+                                </tr>
+                            </table>
+                        </td>
+                        <td class="col" colspan="2">OBJECT HAS BEEN REMOVED</td>
+                    </tr>
+                    <tr>
+                        <td class="col bg-light" colspan="2">OBJECT NOT PRESENT</td>
+                        <td class="col bg-success-subtle" style="text-align:center">TABLE5_IDX</td>
+                        <td class="col bg-success-subtle">
+                            <table class="table-borderless">
+                                <tr>
+                                    <td class="col">
+                                        table: TABLE_5, columns: [COL1], uniqueness: NONUNIQUE,
+                                        prefix_length: None, tablespace: None
+                                    </td>
+                                </tr>
+                            </table>
+                        </td>
+                    </tr>
+
+
+                </tbody>
+            </table>
+        </div>
+
+        <div class="table-responsive">
+            <table class="table table-bordered caption-top">
+                <caption class="caption-top">
+                    <h5>CONSTRAINTS</h5>
+                </caption>
+                <thead>
+                    <tr>
+                        <th class="col" colspan="2">
+                            <h5>Version: v1.0.0</h5>
+                        </th>
+                        <th class="col" colspan="2">
+                            <h5>Version: v1.1.0</h5>
+                        </th>
+                    </tr>
+                </thead>
+                <tbody>
+
+
+                    <tr>
+                        <td class="col  bg-danger-subtle" style="text-align:center">TABLE_1_FK</td>
+                        <td class="col  bg-danger-subtle">
+                            <table class="table-borderless">
+                                <tr>
+                                    <td class="col">
+                                        table: TABLE_1, type: REFERENTIAL INTEGRITY (FOREIGN KEY), rule: NO
+                                        ACTION
+                                    </td>
+                                </tr>
+                            </table>
+                        </td>
+                        <td class="col" colspan="2">OBJECT HAS BEEN REMOVED</td>
+                    </tr>
+                    <tr>
+                        <td class="col  bg-danger-subtle" style="text-align:center">TABLE_1_PK</td>
+                        <td class="col  bg-danger-subtle">
+                            <table class="table-borderless">
+                                <tr>
+                                    <td class="col">
+                                        table: TABLE_1, columns: [COL2], type: PRIMARY KEY
+                                    </td>
+                                </tr>
+                            </table>
+                        </td>
+                        <td class="col" colspan="2">OBJECT HAS BEEN REMOVED</td>
+                    </tr>
+                    <tr>
+                        <td class="col  bg-danger-subtle" style="text-align:center">TABLE4_FK</td>
+                        <td class="col  bg-danger-subtle">
+                            <table class="table-borderless">
+                                <tr>
+                                    <td class="col">
+                                        table: TABLE_4, type: REFERENTIAL INTEGRITY (FOREIGN KEY), rule: NO ACTION
+                                    </td>
+                                </tr>
+                            </table>
+                        </td>
+                        <td class="col" colspan="2">OBJECT HAS BEEN REMOVED</td>
+                    </tr>
+
+
+                </tbody>
+            </table>
+        </div>
+
+        <div class="table-responsive">
+            <table class="table table-bordered caption-top">
+                <caption class="caption-top">
+                    <h5>PACKAGES</h5>
+                </caption>
+                <thead>
+                    <tr>
+                        <th class="col" colspan="2">
+                            <h5>Version: v1.0.0</h5>
+                        </th>
+                        <th class="col" colspan="2">
+                            <h5>Version: v1.1.0</h5>
+                        </th>
+                    </tr>
+                </thead>
+                <tbody>
+
+
+                    <tr>
+                        <td class="col" colspan="2">PKG_1</td>
+                        <td class="col" style="text-align:center">PKG_1</td>
+                        <td class="col bg-warning-subtle">Package Body and Definition has been changed</td>
+                    </tr>
+
+
+                </tbody>
+            </table>
+        </div>
+
+        <div class="table-responsive">
+            <table class="table table-bordered caption-top">
+                <caption class="caption-top">
+                    <h5>JOBS</h5>
+                </caption>
+                <thead>
+                    <tr>
+                        <th class="col" colspan="2">
+                            <h5>Version: v1.0.0</h5>
+                        </th>
+                        <th class="col" colspan="2">
+                            <h5>Version: v1.1.0</h5>
+                        </th>
+                    </tr>
+                </thead>
+                <tbody>
+
+
+                    <tr>
+                        <td class="col  bg-danger-subtle" style="text-align:center">JOB_1</td>
+                        <td class="col  bg-danger-subtle">
+                            <table class="table-borderless">
+                                <tr>
+                                    <td class="col">
+                                        action: JOB_1_SP, interval: FREQ=HOURLY
+                                    </td>
+                                </tr>
+                            </table>
+                        </td>
+                        <td class="col" colspan="2">OBJECT HAS BEEN REMOVED</td>
+                    </tr>
+                    <tr>
+                        <td class="col bg-light" colspan="2">OBJECT NOT PRESENT</td>
+                        <td class="col bg-success-subtle" style="text-align:center">JOB_2</td>
+                        <td class="col bg-success-subtle">
+                            <table class="table-borderless">
+                                <tr>
+                                    <td class="col">
+                                        <span class="badge bg-dark-subtle text-dark rounded-pill">documentation</span> a
+                                        job that schedules a daily sync of an index in TABLE_5
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td class="col">
+                                        action: PKG_1.JOB_2_SP, interval:
+                                        FREQ=DAILY;BYHOUR=4;BYMINUTE=0;BYSECOND=0
+                                    </td>
+                                </tr>
+                            </table>
+                        </td>
+                    </tr>
+
+
+                </tbody>
+            </table>
+        </div>
+
+    </main>
+</body>
+
+</html>
