@@ -426,7 +426,7 @@ wheels = [
 
 [[package]]
 name = "git-changelog"
-version = "2.6.2"
+version = "2.6.3"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
     { name = "jinja2" },
@@ -436,9 +436,9 @@ dependencies = [
     { name = "tomli", marker = "python_full_version < '3.11'" },
     { name = "typing-extensions", marker = "python_full_version < '3.13'" },
 ]
-sdist = { url = "https://files.pythonhosted.org/packages/e8/b4/ffa0a7c6cfdfec50f334bcc095850872f3db2e87b43e2ae59c6925025b7c/git_changelog-2.6.2.tar.gz", hash = "sha256:21a19971e26bbc641a92750b307788baa3ee2b75e743d31f0cb74bb37fbc4563", size = 81383, upload-time = "2025-09-03T09:35:25.306Z" }
+sdist = { url = "https://files.pythonhosted.org/packages/6e/88/e38f434e41c520ea14feb58bee94dd14f785de5f72ab3d3a21a7fcc192ff/git_changelog-2.6.3.tar.gz", hash = "sha256:d9a5cd7bd8c7dd3eb903c9de93ea5c24b0099ba6e56937f1d9406f7d09034d96", size = 81476, upload-time = "2025-09-18T12:35:36.618Z" }
 wheels = [
-    { url = "https://files.pythonhosted.org/packages/2f/18/e76abcba216d39a0a99ebdd8619ed1b1211046e309633dd8f27db9e955ec/git_changelog-2.6.2-py3-none-any.whl", hash = "sha256:c8538f42079a513d900b128ec211479c5662f8932156d690b1136055736ab5db", size = 37269, upload-time = "2025-09-03T09:35:23.818Z" },
+    { url = "https://files.pythonhosted.org/packages/a5/35/44a2f7f7cfb321d7efcf49a366d3e58b44c960cc3d0279dfa6ef7b787b54/git_changelog-2.6.3-py3-none-any.whl", hash = "sha256:733d0416e5635902ad30d050b3089cb00e49034399e00fba003a63b1c975bfa3", size = 37283, upload-time = "2025-09-18T12:35:35.192Z" },
 ]
 
 [[package]]
