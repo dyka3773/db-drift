@@ -12,15 +12,6 @@ wheels = [
 ]
 
 [[package]]
-name = "appdirs"
-version = "1.4.4"
-source = { registry = "https://pypi.org/simple" }
-sdist = { url = "https://files.pythonhosted.org/packages/d7/d8/05696357e0311f5b5c316d7b95f46c669dd9c15aaeecbb48c7d0aeb88c40/appdirs-1.4.4.tar.gz", hash = "sha256:7d5d0167b2b1ba821647616af46a749d1c653740dd0d2415100fe26e27afdf41", size = 13470, upload-time = "2020-05-11T07:59:51.037Z" }
-wheels = [
-    { url = "https://files.pythonhosted.org/packages/3b/00/2344469e2084fb287c2e0b57b72910309874c3245463acd6cf5e3db69324/appdirs-1.4.4-py2.py3-none-any.whl", hash = "sha256:a841dacd6b99318a741b166adb07e19ee71a274450e68237b4650ca1055ab128", size = 9566, upload-time = "2020-05-11T07:59:49.499Z" },
-]
-
-[[package]]
 name = "backports-tarfile"
 version = "1.2.0"
 source = { registry = "https://pypi.org/simple" }
@@ -435,19 +426,19 @@ wheels = [
 
 [[package]]
 name = "git-changelog"
-version = "2.5.3"
+version = "2.6.2"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
-    { name = "appdirs" },
     { name = "jinja2" },
     { name = "packaging" },
+    { name = "platformdirs" },
     { name = "semver" },
     { name = "tomli", marker = "python_full_version < '3.11'" },
     { name = "typing-extensions", marker = "python_full_version < '3.13'" },
 ]
-sdist = { url = "https://files.pythonhosted.org/packages/ba/e0/82cc28b538b3a2f952d52fa512b59f0c8f6e6b0125ac3ffef34ffed9b50c/git_changelog-2.5.3.tar.gz", hash = "sha256:2d211a58213eaa97c73be895821c9d4c9242748eb56753f4759c0d24fe493b77", size = 75083, upload-time = "2024-11-26T00:14:17.549Z" }
+sdist = { url = "https://files.pythonhosted.org/packages/e8/b4/ffa0a7c6cfdfec50f334bcc095850872f3db2e87b43e2ae59c6925025b7c/git_changelog-2.6.2.tar.gz", hash = "sha256:21a19971e26bbc641a92750b307788baa3ee2b75e743d31f0cb74bb37fbc4563", size = 81383, upload-time = "2025-09-03T09:35:25.306Z" }
 wheels = [
-    { url = "https://files.pythonhosted.org/packages/77/7c/701dc05657d7a9310b8376585de3bf21df12ae317ab672b18428919c2c1b/git_changelog-2.5.3-py3-none-any.whl", hash = "sha256:11c12715a6f41dc36aa3219976492ef905b45a2fc39ad75e98be2895fd750440", size = 32847, upload-time = "2024-11-26T00:14:15.953Z" },
+    { url = "https://files.pythonhosted.org/packages/2f/18/e76abcba216d39a0a99ebdd8619ed1b1211046e309633dd8f27db9e955ec/git_changelog-2.6.2-py3-none-any.whl", hash = "sha256:c8538f42079a513d900b128ec211479c5662f8932156d690b1136055736ab5db", size = 37269, upload-time = "2025-09-03T09:35:23.818Z" },
 ]
 
 [[package]]
@@ -843,11 +834,11 @@ wheels = [
 
 [[package]]
 name = "platformdirs"
-version = "4.3.8"
+version = "4.4.0"
 source = { registry = "https://pypi.org/simple" }
-sdist = { url = "https://files.pythonhosted.org/packages/fe/8b/3c73abc9c759ecd3f1f7ceff6685840859e8070c4d947c93fae71f6a0bf2/platformdirs-4.3.8.tar.gz", hash = "sha256:3d512d96e16bcb959a814c9f348431070822a6496326a4be0911c40b5a74c2bc", size = 21362, upload-time = "2025-05-07T22:47:42.121Z" }
+sdist = { url = "https://files.pythonhosted.org/packages/23/e8/21db9c9987b0e728855bd57bff6984f67952bea55d6f75e055c46b5383e8/platformdirs-4.4.0.tar.gz", hash = "sha256:ca753cf4d81dc309bc67b0ea38fd15dc97bc30ce419a7f58d13eb3bf14c4febf", size = 21634, upload-time = "2025-08-26T14:32:04.268Z" }
 wheels = [
-    { url = "https://files.pythonhosted.org/packages/fe/39/979e8e21520d4e47a0bbe349e2713c0aac6f3d853d0e5b34d76206c439aa/platformdirs-4.3.8-py3-none-any.whl", hash = "sha256:ff7059bb7eb1179e2685604f4aaf157cfd9535242bd23742eadc3c13542139b4", size = 18567, upload-time = "2025-05-07T22:47:40.376Z" },
+    { url = "https://files.pythonhosted.org/packages/40/4b/2028861e724d3bd36227adfa20d3fd24c3fc6d52032f4a93c133be5d17ce/platformdirs-4.4.0-py3-none-any.whl", hash = "sha256:abd01743f24e5287cd7a5db3752faf1a2d65353f38ec26d98e25a6db65958c85", size = 18654, upload-time = "2025-08-26T14:32:02.735Z" },
 ]
 
 [[package]]
@@ -1050,11 +1041,11 @@ wheels = [
 
 [[package]]
 name = "pymysql"
-version = "1.1.1"
+version = "1.1.2"
 source = { registry = "https://pypi.org/simple" }
-sdist = { url = "https://files.pythonhosted.org/packages/b3/8f/ce59b5e5ed4ce8512f879ff1fa5ab699d211ae2495f1adaa5fbba2a1eada/pymysql-1.1.1.tar.gz", hash = "sha256:e127611aaf2b417403c60bf4dc570124aeb4a57f5f37b8e95ae399a42f904cd0", size = 47678, upload-time = "2024-05-21T11:03:43.722Z" }
+sdist = { url = "https://files.pythonhosted.org/packages/f5/ae/1fe3fcd9f959efa0ebe200b8de88b5a5ce3e767e38c7ac32fb179f16a388/pymysql-1.1.2.tar.gz", hash = "sha256:4961d3e165614ae65014e361811a724e2044ad3ea3739de9903ae7c21f539f03", size = 48258, upload-time = "2025-08-24T12:55:55.146Z" }
 wheels = [
-    { url = "https://files.pythonhosted.org/packages/0c/94/e4181a1f6286f545507528c78016e00065ea913276888db2262507693ce5/PyMySQL-1.1.1-py3-none-any.whl", hash = "sha256:4de15da4c61dc132f4fb9ab763063e693d521a80fd0e87943b9a453dd4c19d6c", size = 44972, upload-time = "2024-05-21T11:03:41.216Z" },
+    { url = "https://files.pythonhosted.org/packages/7c/4c/ad33b92b9864cbde84f259d5df035a6447f91891f5be77788e2a3892bce3/pymysql-1.1.2-py3-none-any.whl", hash = "sha256:e6b1d89711dd51f8f74b1631fe08f039e7d76cf67a42a323d3178f0f25762ed9", size = 45300, upload-time = "2025-08-24T12:55:53.394Z" },
 ]
 
 [[package]]
@@ -1101,7 +1092,7 @@ wheels = [
 
 [[package]]
 name = "pytest"
-version = "8.4.1"
+version = "8.4.2"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
     { name = "colorama", marker = "sys_platform == 'win32'" },
@@ -1112,9 +1103,9 @@ dependencies = [
     { name = "pygments" },
     { name = "tomli", marker = "python_full_version < '3.11'" },
 ]
-sdist = { url = "https://files.pythonhosted.org/packages/08/ba/45911d754e8eba3d5a841a5ce61a65a685ff1798421ac054f85aa8747dfb/pytest-8.4.1.tar.gz", hash = "sha256:7c67fd69174877359ed9371ec3af8a3d2b04741818c51e5e99cc1742251fa93c", size = 1517714, upload-time = "2025-06-18T05:48:06.109Z" }
+sdist = { url = "https://files.pythonhosted.org/packages/a3/5c/00a0e072241553e1a7496d638deababa67c5058571567b92a7eaa258397c/pytest-8.4.2.tar.gz", hash = "sha256:86c0d0b93306b961d58d62a4db4879f27fe25513d4b969df351abdddb3c30e01", size = 1519618, upload-time = "2025-09-04T14:34:22.711Z" }
 wheels = [
-    { url = "https://files.pythonhosted.org/packages/29/16/c8a903f4c4dffe7a12843191437d7cd8e32751d5de349d45d3fe69544e87/pytest-8.4.1-py3-none-any.whl", hash = "sha256:539c70ba6fcead8e78eebbf1115e8b589e7565830d7d006a8723f19ac8a0afb7", size = 365474, upload-time = "2025-06-18T05:48:03.955Z" },
+    { url = "https://files.pythonhosted.org/packages/a8/a4/20da314d277121d6534b3a980b29035dcd51e6744bd79075a6ce8fa4eb8d/pytest-8.4.2-py3-none-any.whl", hash = "sha256:872f880de3fc3a5bdc88a11b39c9710c3497a547cfa9320bc3c5e62fbf272e79", size = 365750, upload-time = "2025-09-04T14:34:20.226Z" },
 ]
 
 [[package]]
@@ -1141,7 +1132,7 @@ wheels = [
 
 [[package]]
 name = "python-semantic-release"
-version = "10.3.1"
+version = "10.3.2"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
     { name = "click" },
@@ -1158,9 +1149,9 @@ dependencies = [
     { name = "shellingham" },
     { name = "tomlkit" },
 ]
-sdist = { url = "https://files.pythonhosted.org/packages/af/75/fb578d1805dc482f619c82431b398ab3c0489817a1cdbe2fa1be48d3d7d3/python_semantic_release-10.3.1.tar.gz", hash = "sha256:16003292315ee29b6ad424fad9745946422cf965e19649269c4e2fb8271cb267", size = 323536, upload-time = "2025-08-06T04:41:10.135Z" }
+sdist = { url = "https://files.pythonhosted.org/packages/c7/3a/7e2680d3fb700c463e2a3c2d755db3f6a9fe85361058f46fc90b74a81ee8/python_semantic_release-10.3.2.tar.gz", hash = "sha256:c171d610c04f7c42ccf3e39073ec76afc98e0bd2ed704872790035fea1256e61", size = 331923, upload-time = "2025-09-06T16:17:27.533Z" }
 wheels = [
-    { url = "https://files.pythonhosted.org/packages/78/49/0a74aafd0da45a7ee2c38b82112d576ee48a6795d813c8025cdf9cbaf159/python_semantic_release-10.3.1-py3-none-any.whl", hash = "sha256:b2677018e761dfbfdf5758eeee6b09963e136d67c43059f12f9bc6c441fcbf13", size = 142065, upload-time = "2025-08-06T04:41:08.056Z" },
+    { url = "https://files.pythonhosted.org/packages/fe/38/d3f8a5129518a16518738d74f0938170b589527e47538932f8bb78bcffeb/python_semantic_release-10.3.2-py3-none-any.whl", hash = "sha256:d41d48efc56933b90c718bdfe2a235a986f06b8b371bd6598c8f18c05fe22517", size = 142051, upload-time = "2025-09-06T16:17:26.001Z" },
 ]
 
 [[package]]
@@ -1439,7 +1430,7 @@ wheels = [
 
 [[package]]
 name = "tox"
-version = "4.28.4"
+version = "4.30.2"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
     { name = "cachetools" },
@@ -1454,14 +1445,14 @@ dependencies = [
     { name = "typing-extensions", marker = "python_full_version < '3.11'" },
     { name = "virtualenv" },
 ]
-sdist = { url = "https://files.pythonhosted.org/packages/cf/01/321c98e3cc584fd101d869c85be2a8236a41a84842bc6af5c078b10c2126/tox-4.28.4.tar.gz", hash = "sha256:b5b14c6307bd8994ff1eba5074275826620325ee1a4f61316959d562bfd70b9d", size = 199692, upload-time = "2025-07-31T21:20:26.6Z" }
+sdist = { url = "https://files.pythonhosted.org/packages/da/b7/ba4e391cd112c18338aef270abcda2a25783f90509fa6806c8f2a1ea842e/tox-4.30.2.tar.gz", hash = "sha256:772925ad6c57fe35c7ed5ac3e958ac5ced21dff597e76fc40c1f5bf3cd1b6a2e", size = 202622, upload-time = "2025-09-04T16:24:49.602Z" }
 wheels = [
-    { url = "https://files.pythonhosted.org/packages/fe/54/564a33093e41a585e2e997220986182c037bc998abf03a0eb4a7a67c4eff/tox-4.28.4-py3-none-any.whl", hash = "sha256:8d4ad9ee916ebbb59272bb045e154a10fa12e3bbdcf94cc5185cbdaf9b241f99", size = 174058, upload-time = "2025-07-31T21:20:24.836Z" },
+    { url = "https://files.pythonhosted.org/packages/4e/28/8212e633612f959e9b61f3f1e3103e651e33d808a097623495590a42f1a4/tox-4.30.2-py3-none-any.whl", hash = "sha256:efd261a42e8c82a59f9026320a80a067f27f44cad2e72a6712010c311d31176b", size = 175527, upload-time = "2025-09-04T16:24:47.694Z" },
 ]
 
 [[package]]
 name = "twine"
-version = "6.1.0"
+version = "6.2.0"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
     { name = "id" },
@@ -1474,9 +1465,9 @@ dependencies = [
     { name = "rich" },
     { name = "urllib3" },
 ]
-sdist = { url = "https://files.pythonhosted.org/packages/c8/a2/6df94fc5c8e2170d21d7134a565c3a8fb84f9797c1dd65a5976aaf714418/twine-6.1.0.tar.gz", hash = "sha256:be324f6272eff91d07ee93f251edf232fc647935dd585ac003539b42404a8dbd", size = 168404, upload-time = "2025-01-21T18:45:26.758Z" }
+sdist = { url = "https://files.pythonhosted.org/packages/e0/a8/949edebe3a82774c1ec34f637f5dd82d1cf22c25e963b7d63771083bbee5/twine-6.2.0.tar.gz", hash = "sha256:e5ed0d2fd70c9959770dce51c8f39c8945c574e18173a7b81802dab51b4b75cf", size = 172262, upload-time = "2025-09-04T15:43:17.255Z" }
 wheels = [
-    { url = "https://files.pythonhosted.org/packages/7c/b6/74e927715a285743351233f33ea3c684528a0d374d2e43ff9ce9585b73fe/twine-6.1.0-py3-none-any.whl", hash = "sha256:a47f973caf122930bf0fbbf17f80b83bc1602c9ce393c7845f289a3001dc5384", size = 40791, upload-time = "2025-01-21T18:45:24.584Z" },
+    { url = "https://files.pythonhosted.org/packages/3a/7a/882d99539b19b1490cac5d77c67338d126e4122c8276bf640e411650c830/twine-6.2.0-py3-none-any.whl", hash = "sha256:418ebf08ccda9a8caaebe414433b0ba5e25eb5e4a927667122fbe8f829f985d8", size = 42727, upload-time = "2025-09-04T15:43:15.994Z" },
 ]
 
 [[package]]
