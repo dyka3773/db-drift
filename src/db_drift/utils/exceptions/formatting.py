@@ -5,9 +5,9 @@ import sys
 import traceback
 from typing import TextIO
 
+from db_drift.constants import ExitCode
 from db_drift.utils.exceptions import CliArgumentError, DatabaseConnectionError, MissingConfigError
 from db_drift.utils.exceptions.base import DbDriftError, DbDriftSystemError
-from db_drift.utils.exceptions.status_codes import ExitCode
 
 
 def format_error_message(error: Exception, show_traceback: bool = False) -> str:  # noqa: FBT001, FBT002

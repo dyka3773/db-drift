@@ -1,5 +1,6 @@
 """Tests for exception handling in db-drift."""
 
+from db_drift.constants import ExitCode
 from db_drift.utils.exceptions import (
     CliArgumentError,
     CliError,
@@ -12,7 +13,6 @@ from db_drift.utils.exceptions import (
     DbDriftInterruptError,
     DbDriftSystemError,
     DbDriftUserError,
-    ExitCode,
     MissingConfigError,
 )
 from db_drift.utils.exceptions.database import DatabaseQueryError

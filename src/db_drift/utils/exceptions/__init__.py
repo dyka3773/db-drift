@@ -11,7 +11,6 @@ from db_drift.utils.exceptions.database import (
     DatabaseSchemaError,
     DatabaseTimeoutError,
 )
-from db_drift.utils.exceptions.status_codes import ExitCode
 
 __all__ = [
     "CliArgumentError",
@@ -31,6 +30,5 @@ __all__ = [
     "DbDriftInterruptError",
     "DbDriftSystemError",
     "DbDriftUserError",
-    "ExitCode",
     "MissingConfigError",
 ]
