@@ -1,5 +1,5 @@
 version = 1
-revision = 2
+revision = 3
 requires-python = ">=3.10"
 
 [[package]]
@@ -361,7 +361,7 @@ dev = [
     { name = "pytest", specifier = ">=8.4.1" },
     { name = "python-semantic-release", specifier = "==10.4.1" },
     { name = "tox", specifier = "==4.30.3" },
-    { name = "twine" },
+    { name = "twine", specifier = ">=6.1.0" },
 ]
 
 [[package]]

@@ -90,7 +90,8 @@ lint.ignore = [
     # "W293",     # Pycodestyle - blank line contains whitespace
     "S608",    # Flake8-bandit - Possible SQL injection in f-string
     "TD003",   # Flake8-todos - Missing issue link in TODO comment
-    # "FIX002",  # Flake8-fixme - Line contains TODO, consider resolving the issue
+    "FIX002",  # Flake8-fixme - Line contains TODO, consider resolving the issue
+    "S101",   # Flake8-bandit - Use of assert detected.
 ]
 
 [format]
