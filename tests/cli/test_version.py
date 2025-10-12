@@ -1,5 +1,6 @@
 """Tests for CLI --version/-v flag functionality."""
 
+import re
 import subprocess
 import sys
 from unittest.mock import Mock, patch
@@ -7,13 +8,19 @@ from unittest.mock import Mock, patch
 import pytest
 from db_drift.cli.utils import get_version
 
+EXPECTED_VERSION_OUTPUT_PARTS = 2
+
 
 def is_valid_version_string(version: str) -> bool:
-    """Check if the version string is valid."""
-    return (
-        version == "unknown"
-        or version.replace(".", "").replace("-", "").replace("+", "").replace("dev", "").replace("rc", "").replace("a", "").replace("b", "").isalnum()
+    """Check if the version string is valid (PEP 440 or 'unknown')."""
+    if version == "unknown":
+        return True
+    # PEP 440 version regex (simplified, covers most cases)
+    pep440_regex = (
+        r"^(?:[1-9]\d*|0)(?:\.(?:[1-9]\d*|0))*"
+        r"(?:a\d+|b\d+|rc\d+|\.post\d+|\.dev\d+)?(?:\+\w+)?$"
     )
+    return re.match(pep440_regex, version) is not None
 
 
 def test_get_version_function_returns_string() -> None:
@@ -82,7 +89,7 @@ def test_version_flag_via_cmd() -> None:
 
         output = result.stdout.strip()
         parts = output.split()
-        assert len(parts) == 2  # Should be two parts: "db-drift" and version number  # noqa: PLR2004
+        assert len(parts) == EXPECTED_VERSION_OUTPUT_PARTS  # Should be two parts: "db-drift" and version number
         # Second part should be version number
         version_part = parts[1]
         assert len(version_part) > 0
