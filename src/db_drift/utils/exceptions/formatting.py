@@ -149,7 +149,7 @@ def handle_unexpected_error(debug_mode: int, logger: logging.Logger) -> None:
     Handle unexpected errors based on debug mode.
 
     Args:
-        debug_mode(int): Whether debug mode is enabled.
+        debug_mode(int): Whether debug mode is enabled (1/True) or not (0/False).
         logger(logging.Logger): The logger instance to use.
     """
     if debug_mode:

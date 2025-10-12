@@ -75,6 +75,7 @@ class DatabaseQueryError(DatabaseError):
         """
         full_message = f"Database query failed: {message}"
         super().__init__(full_message, connection_string)
+        self.exit_code = ExitCode.SOFTWARE_ERROR
         self.query = query
 
 
@@ -98,6 +99,7 @@ class DatabaseSchemaError(DatabaseError):
         full_message = f"Schema '{schema_name}' error: {message}" if schema_name else f"Database schema error: {message}"
 
         super().__init__(full_message, connection_string)
+        self.exit_code = ExitCode.DATA_ERROR
         self.schema_name = schema_name
 
 

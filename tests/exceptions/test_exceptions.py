@@ -24,12 +24,12 @@ class TestBaseExceptions:
 
     def test_db_drift_error_creation(self) -> None:
         """Test DbDriftError creation with message and exit code."""
-        overriden_exit_code = 5
+        overridden_exit_code = 5
 
-        error = DbDriftError("Test error", exit_code=overriden_exit_code)
+        error = DbDriftError("Test error", exit_code=overridden_exit_code)
         assert str(error) == "Test error"
         assert error.message == "Test error"
-        assert error.exit_code == overriden_exit_code
+        assert error.exit_code == overridden_exit_code
 
     def test_db_drift_error_default_exit_code(self) -> None:
         """Test DbDriftError uses default exit code."""

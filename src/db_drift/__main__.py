@@ -9,7 +9,7 @@ from db_drift.utils.exceptions.formatting import handle_error_and_exit, handle_u
 logger = custom_logging.setup_logger("db-drift")
 
 
-DEBUG_MODE: int = os.getenv("DB_DRIFT_DEBUG", "").lower() in ("1", "true", "yes", "on")
+DEBUG_MODE: int | bool = os.getenv("DB_DRIFT_DEBUG", "").lower() in ("1", "true", "yes", "on")
 
 
 def main() -> None:
