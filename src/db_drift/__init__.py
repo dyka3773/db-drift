@@ -1,2 +1,1 @@
-def main() -> None:
-    print("Hello from db-drift!")
+from db_drift.app import main  # noqa: F401
