@@ -86,11 +86,11 @@ lint.ignore = [
     "E402",     # Pycodestyle - module level import not at top of file
     "D205",     # Pydocstyle - 1 blank line required between summary line and description
     "D413",     # Pydocstyle - missing newline after end of function docstring
-    "G004",     # Flake8-logging-format - Logging statement uses f-string
+    # "G004",     # Flake8-logging-format - Logging statement uses f-string
     # "W293",     # Pycodestyle - blank line contains whitespace
     "S608",    # Flake8-bandit - Possible SQL injection in f-string
     "TD003",   # Flake8-todos - Missing issue link in TODO comment
-    "FIX002",  # Flake8-fixme - Line contains TODO, consider resolving the issue
+    # "FIX002",  # Flake8-fixme - Line contains TODO, consider resolving the issue
 ]
 
 [format]

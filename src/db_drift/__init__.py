@@ -1,1 +1,1 @@
-from db_drift.app import main  # noqa: F401
+from db_drift.__main__ import main  # noqa: F401
