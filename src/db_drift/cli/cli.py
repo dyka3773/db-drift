@@ -2,6 +2,7 @@ import argparse
 import logging
 
 from db_drift.cli.utils import get_version
+from db_drift.constants import SUPPORTED_DBMS
 from db_drift.utils.exceptions import CliArgumentError, CliUsageError
 
 logger = logging.getLogger("db-drift")
@@ -19,6 +20,13 @@ def cli() -> None:
         "--version",
         action="version",
         version=f"db-drift {get_version()}",
+    )
+
+    parser.add_argument(
+        "--dbms",
+        choices=SUPPORTED_DBMS,
+        help="Specify the type of DBMS (default: sqlite)",
+        default="sqlite",
     )
 
     try:
