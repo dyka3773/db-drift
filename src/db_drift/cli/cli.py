@@ -16,4 +16,4 @@ def cli() -> None:
         version=f"db-drift {get_version()}",
     )
 
-    args = parser.parse_args()
+    _ = parser.parse_args()
