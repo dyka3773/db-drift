@@ -29,12 +29,12 @@ classifiers = [
     "Typing :: Typed",
 ]
 dependencies = [
-    "oracledb>=3.3.0",
+    "oracledb>=3.4.0",
     "psycopg[binary]>=3.2.9",
     "pymysql>=1.1.1",
     "python-dotenv>=1.1.1",
     "pyyaml>=6.0.3",
-    "sqlmodel>=0.0.25",
+    "sqlmodel>=0.0.27",
     "sshtunnel>=0.4.0",
 ]
 
@@ -50,7 +50,7 @@ dev = [
     "git-changelog==2.6.3",
     "pytest>=8.4.1",
     "python-semantic-release==10.4.1",
-    "tox==4.30.3",
+    "tox==4.31.0",
     "twine>=6.1.0",
 ]
 
@@ -96,7 +96,7 @@ sections = [
 ]
 
 [tool.tox]
-env_list = ["lint", "3.10", "3.11", "3.12", "3.13"]
+env_list = ["lint", "3.10", "3.11", "3.12", "3.13", "3.14"]
 
 [tool.tox.env_run_base]
 description = "Run tests with the current Python version"

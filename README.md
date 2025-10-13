@@ -2,7 +2,7 @@
 # DB Drift
 
 [![PyPI version](https://badge.fury.io/py/db-drift.svg)](https://badge.fury.io/py/db-drift)
-![Python](https://img.shields.io/badge/python-3.10%20|%203.11%20|%203.12%20|%203.13-blue.svg)
+![Python](https://img.shields.io/badge/python-3.10%20|%203.11%20|%203.12%20|%203.13%20|%203.14-blue.svg)
 ![License](https://img.shields.io/badge/license-MIT-green.svg)
 [![Downloads](https://pepy.tech/badge/db-drift)](https://pepy.tech/project/db-drift)
 [![CI](https://github.com/dyka3773/db-drift/workflows/CI/badge.svg)](https://github.com/dyka3773/db-drift/actions)
