@@ -7,7 +7,7 @@ from db_drift.utils.exceptions.base import DbDriftUserError
 class CliError(DbDriftUserError):
     """Base class for CLI-related errors."""
 
-    def __init__(self, message: str, exit_code: int = ExitCode.USAGE_ERROR) -> None:
+    def __init__(self, message: str, exit_code: ExitCode = ExitCode.USAGE_ERROR) -> None:
         """
         Initialize CLI error.
 

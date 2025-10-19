@@ -26,7 +26,7 @@ class DbDriftError(Exception):
 class DbDriftUserError(DbDriftError):
     """Base class for user-caused errors (wrong arguments, invalid config, etc.)."""
 
-    def __init__(self, message: str, exit_code: int = ExitCode.USAGE_ERROR) -> None:
+    def __init__(self, message: str, exit_code: ExitCode = ExitCode.USAGE_ERROR) -> None:
         """Initialize user error with default exit code 2."""
         super().__init__(message, exit_code)
 
@@ -34,7 +34,7 @@ class DbDriftUserError(DbDriftError):
 class DbDriftSystemError(DbDriftError):
     """Base class for system-level errors (network issues, permission errors, etc.)."""
 
-    def __init__(self, message: str, exit_code: int = ExitCode.GENERAL_ERROR) -> None:
+    def __init__(self, message: str, exit_code: ExitCode = ExitCode.GENERAL_ERROR) -> None:
         """Initialize system error with default exit code 1."""
         super().__init__(message, exit_code)
 
