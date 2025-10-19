@@ -5,7 +5,7 @@ import sys
 import traceback
 from typing import TextIO
 
-from db_drift.constants import ExitCode
+from db_drift.utils.constants import ExitCode
 from db_drift.utils.exceptions import CliArgumentError, DatabaseConnectionError, MissingConfigError
 from db_drift.utils.exceptions.base import DbDriftError, DbDriftSystemError
 

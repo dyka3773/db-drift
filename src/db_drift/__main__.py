@@ -1,8 +1,8 @@
 import os
 
 from db_drift.cli.cli import cli
-from db_drift.constants import ExitCode
 from db_drift.utils import custom_logging
+from db_drift.utils.constants import ExitCode
 from db_drift.utils.exceptions import CliError, ConfigError, DatabaseError, DbDriftError, DbDriftInterruptError
 from db_drift.utils.exceptions.base import DbDriftSystemError
 from db_drift.utils.exceptions.formatting import handle_error_and_exit, handle_unexpected_error

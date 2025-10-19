@@ -1,6 +1,6 @@
 """Base exceptions for db-drift application."""
 
-from db_drift.constants import ExitCode
+from db_drift.utils.constants import ExitCode
 
 
 class DbDriftError(Exception):

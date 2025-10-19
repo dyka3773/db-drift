@@ -1,6 +1,6 @@
 """Tests for exception handling in db-drift."""
 
-from db_drift.constants import ExitCode
+from db_drift.utils.constants import ExitCode
 from db_drift.utils.exceptions import (
     CliArgumentError,
     CliError,

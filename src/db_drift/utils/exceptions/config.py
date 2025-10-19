@@ -2,7 +2,7 @@
 
 from pathlib import Path
 
-from db_drift.constants import ExitCode
+from db_drift.utils.constants import ExitCode
 from db_drift.utils.exceptions.base import DbDriftUserError
 
 
