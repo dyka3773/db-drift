@@ -1,13 +1,13 @@
 """CLI-specific exceptions for db-drift."""
 
+from db_drift.utils.constants import ExitCode
 from db_drift.utils.exceptions.base import DbDriftUserError
-from db_drift.utils.exceptions.status_codes import ExitCode
 
 
 class CliError(DbDriftUserError):
     """Base class for CLI-related errors."""
 
-    def __init__(self, message: str, exit_code: int = ExitCode.USAGE_ERROR) -> None:
+    def __init__(self, message: str, exit_code: ExitCode = ExitCode.USAGE_ERROR) -> None:
         """
         Initialize CLI error.
 

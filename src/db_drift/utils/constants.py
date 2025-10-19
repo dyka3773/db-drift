@@ -13,3 +13,11 @@ class ExitCode(Enum):
     NO_PERMISSION = 77
     CONFIG_ERROR = 78
     SIGINT = 130
+
+
+SUPPORTED_DBMS: list[str] = [
+    # "postgresql",
+    # "mysql",
+    "sqlite",
+    # "oracle",
+]

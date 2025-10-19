@@ -2,7 +2,7 @@
 # DB Drift
 
 [![PyPI version](https://badge.fury.io/py/db-drift.svg)](https://badge.fury.io/py/db-drift)
-![Python](https://img.shields.io/badge/python-3.10%20|%203.11%20|%203.12%20|%203.13-blue.svg)
+![Python](https://img.shields.io/badge/python-3.10%20|%203.11%20|%203.12%20|%203.13%20|%203.14-blue.svg)
 ![License](https://img.shields.io/badge/license-MIT-green.svg)
 [![Downloads](https://pepy.tech/badge/db-drift)](https://pepy.tech/project/db-drift)
 [![CI](https://github.com/dyka3773/db-drift/workflows/CI/badge.svg)](https://github.com/dyka3773/db-drift/actions)
@@ -17,6 +17,7 @@ A command-line tool to visualize the differences between two DB states.
 - [How to Use](#how-to-use)
 - [Examples](#examples)
 - [Options](#options)
+  - [Supported DBMS Types](#supported-dbms-types)
 - [Troubleshooting](#troubleshooting)
   - [Common Issues](#common-issues)
   - [Getting Help](#getting-help)
@@ -50,12 +51,44 @@ uv add db-drift
 
 ## How to Use
 
+Basic usage:
+
+```bash
+db-drift --source "sqlite:///source.db" --target "sqlite:///target.db"
+```
+
+The tool will generate an HTML report showing the differences between the two database states.
+
 ## Examples
+
+```bash
+# Compare two SQLite databases
+db-drift --source "sqlite:///old_version.db" --target "sqlite:///new_version.db"
+
+# Specify custom output file
+db-drift --source "sqlite:///db1.db" --target "sqlite:///db2.db" --output "my_report.html"
+
+# Show version information
+db-drift --version
+```
 
 ## Options
 
-| Option | Description | Default |
-|--------|-------------|---------|
+| Option | Description | Default | Required |
+|--------|-------------|---------|----------|
+| `-v`, `--version` | Show version information and exit | - | No |
+| `--dbms` | Specify the type of DBMS | `sqlite` | No |
+| `-o`, `--output` | Output filename for the drift report | `drift_report.html` | No |
+| `--source` | Connection string for the source database | - | **Yes** |
+| `--target` | Connection string for the target database | - | **Yes** |
+| `--verbose` | Enable verbose logging output | No | No |
+
+### Supported DBMS Types
+
+Currently supported database management systems:
+- `sqlite` - SQLite databases
+
+*Note: Support for PostgreSQL, MySQL, and Oracle is planned for future releases.*
 
 ## Troubleshooting
 

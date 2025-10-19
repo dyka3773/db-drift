@@ -3,23 +3,20 @@
 import logging
 import sys
 import traceback
-from typing import TextIO
 
+from db_drift.utils.constants import ExitCode
 from db_drift.utils.exceptions import CliArgumentError, DatabaseConnectionError, MissingConfigError
-from db_drift.utils.exceptions.base import DbDriftError, DbDriftSystemError
-from db_drift.utils.exceptions.status_codes import ExitCode
+from db_drift.utils.exceptions.base import DbDriftError
 
 
-def format_error_message(error: Exception, show_traceback: bool = False) -> str:  # noqa: FBT001, FBT002
+def format_error_message(error: Exception) -> str:
     """
     Format an error message for display to the user.
 
     Args:
         error: The exception to format
-        show_traceback: Whether to include traceback information. Default is False.
-
     Returns:
-        Formatted error message
+        Formatted error message string
     """
     if isinstance(error, DbDriftError):
         message = str(error)
@@ -29,10 +26,19 @@ def format_error_message(error: Exception, show_traceback: bool = False) -> str:
         if str(error):
             message += f": {error}"
 
-    if show_traceback:
-        message += f"\n\nTraceback:\n{''.join(traceback.format_exception(type(error), error, error.__traceback__))}"
-
     return message
+
+
+def get_error_stacktrace(error: Exception) -> str | None:
+    """
+    Get the stacktrace of an error if traceback is to be shown.
+
+    Args:
+        error: The exception to get the stacktrace for
+    Returns:
+        Stacktrace string or None if not applicable
+    """
+    return "".join(traceback.format_exception(type(error), error, error.__traceback__))
 
 
 def format_suggestion(error: Exception) -> str | None:
@@ -63,9 +69,9 @@ def format_suggestion(error: Exception) -> str | None:
     return None
 
 
-def print_error(
+def log_error(
     error: Exception,
-    file: TextIO = sys.stderr,
+    logger: logging.Logger,
     show_traceback: bool = False,  # noqa: FBT001, FBT002
     show_suggestions: bool = True,  # noqa: FBT001, FBT002
 ) -> None:
@@ -74,17 +80,21 @@ def print_error(
 
     Args:
         error: The exception to print
-        file: The file to write to (default: stderr)
+        logger: Logger instance for logging
         show_traceback: Whether to include traceback information
         show_suggestions: Whether to show helpful suggestions
     """
-    message = format_error_message(error, show_traceback)
-    print(f"Error: {message}", file=file)
+    message = format_error_message(error)
+    logger.error(f"Error: {message}")
+
+    if show_traceback:
+        stacktrace = get_error_stacktrace(error)
+        logger.debug(f"Stacktrace:\n{stacktrace}")
 
     if show_suggestions:
         suggestion = format_suggestion(error)
         if suggestion:
-            print(f"\n{suggestion}", file=file)
+            logger.error(suggestion)
 
 
 def get_exit_code(error: Exception) -> int:
@@ -102,16 +112,16 @@ def get_exit_code(error: Exception) -> int:
 
     # Standard exit codes for common Python exceptions
     if isinstance(error, KeyboardInterrupt):
-        return ExitCode.SIGINT
+        return ExitCode.SIGINT.value
     if isinstance(error, FileNotFoundError):
-        return ExitCode.NO_INPUT
+        return ExitCode.NO_INPUT.value
     if isinstance(error, PermissionError):
-        return ExitCode.NO_PERMISSION
+        return ExitCode.NO_PERMISSION.value
     if isinstance(error, ConnectionError):
-        return ExitCode.UNAVAILABLE
+        return ExitCode.UNAVAILABLE.value
 
     # Default generic error
-    return ExitCode.GENERAL_ERROR
+    return ExitCode.GENERAL_ERROR.value
 
 
 def handle_error_and_exit(
@@ -134,42 +144,16 @@ def handle_error_and_exit(
     # Log the full error details
     if logger:
         if isinstance(error, DbDriftError):
-            logger.error(f"{error.__class__.__name__}: {error}")
+            logger.debug(f"{error.__class__.__name__}: {error}")
         else:
-            logger.exception(f"Unexpected error: {error.__class__.__name__}: {error}")
+            logger.debug(f"Unexpected error: {error.__class__.__name__}: {error}")
 
     # Print user-friendly error
-    print_error(error, show_traceback=show_traceback, show_suggestions=show_suggestions)
+    log_error(
+        error,
+        logger=logger,
+        show_traceback=show_traceback,
+        show_suggestions=show_suggestions,
+    )
 
     sys.exit(exit_code)
-
-
-def handle_unexpected_error(debug_mode: int, logger: logging.Logger) -> None:
-    """
-    Handle unexpected errors based on debug mode.
-
-    Args:
-        debug_mode(int): Whether debug mode is enabled (1/True) or not (0/False).
-        logger(logging.Logger): The logger instance to use.
-    """
-    if debug_mode:
-        # For debug mode, we'll handle the current exception
-        _, exc_value, _ = sys.exc_info()
-        if exc_value:
-            handle_error_and_exit(
-                exc_value,
-                logger=logger,
-                show_traceback=True,
-                show_suggestions=False,
-            )
-    else:
-        system_error = DbDriftSystemError(
-            "An unexpected error occurred. Set DB_DRIFT_DEBUG=1 for more details.",
-            exit_code=ExitCode.GENERAL_ERROR,
-        )
-        handle_error_and_exit(
-            system_error,
-            logger=logger,
-            show_traceback=False,
-            show_suggestions=False,
-        )
