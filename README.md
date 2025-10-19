@@ -81,6 +81,7 @@ db-drift --version
 | `-o`, `--output` | Output filename for the drift report | `drift_report.html` | No |
 | `--source` | Connection string for the source database | - | **Yes** |
 | `--target` | Connection string for the target database | - | **Yes** |
+| `--verbose` | Enable verbose logging output | No | No |
 
 ### Supported DBMS Types
 

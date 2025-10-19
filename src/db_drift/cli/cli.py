@@ -3,6 +3,7 @@ import logging
 
 from db_drift.cli.utils import check_args_validity, get_version
 from db_drift.utils.constants import SUPPORTED_DBMS
+from db_drift.utils.custom_logging import handle_verbose_logging
 from db_drift.utils.exceptions import CliArgumentError, CliUsageError
 
 logger = logging.getLogger("db-drift")
@@ -49,8 +50,19 @@ def cli() -> None:
         help="Connection string for the target database",
     )
 
+    parser.add_argument(
+        "--verbose",
+        action="store_true",
+        help="Enable verbose logging output",
+    )
+
     try:
         args = parser.parse_args()
+
+        if args.verbose:
+            handle_verbose_logging()
+            logger.debug("Verbose mode enabled.")
+
         logger.debug(f"Parsed arguments: {args}")
 
         check_args_validity(args)
