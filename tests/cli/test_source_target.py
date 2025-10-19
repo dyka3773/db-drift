@@ -14,6 +14,7 @@ def test_source_and_target_same_value_error(mock_parse_args: Mock) -> None:
         output="drift_report.html",
         source="sqlite:///same.db",
         target="sqlite:///same.db",  # Same as source
+        verbose=False,
     )
     mock_parse_args.return_value = mock_args
 
@@ -36,6 +37,7 @@ def test_source_and_target_different_dbms_error(mock_parse_args: Mock) -> None:
             output="drift_report.html",
             source=source,
             target=target,
+            verbose=False,
         )
         mock_parse_args.return_value = mock_args
 

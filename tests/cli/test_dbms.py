@@ -15,6 +15,7 @@ def test_dbms_argument_valid_choices(mock_parse_args: Mock) -> None:
             output="drift_report.html",
             source="sqlite:///source.db",
             target="sqlite:///target.db",
+            verbose=False,
         )
         mock_parse_args.return_value = mock_args
 
@@ -31,6 +32,7 @@ def test_dbms_argument_default_value(mock_parse_args: Mock) -> None:
         output="drift_report.html",
         source="sqlite:///source.db",
         target="sqlite:///target.db",
+        verbose=False,
     )
     mock_parse_args.return_value = mock_args
 

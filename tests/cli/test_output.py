@@ -13,6 +13,7 @@ def test_output_argument_default_value(mock_parse_args: Mock) -> None:
         output="drift_report.html",  # Default value
         source="sqlite:///source.db",
         target="sqlite:///target.db",
+        verbose=False,
     )
     mock_parse_args.return_value = mock_args
 
@@ -36,6 +37,7 @@ def test_output_argument_custom_value(mock_parse_args: Mock) -> None:
             output=output_file,
             source="sqlite:///source.db",
             target="sqlite:///target.db",
+            verbose=False,
         )
         mock_parse_args.return_value = mock_args
 

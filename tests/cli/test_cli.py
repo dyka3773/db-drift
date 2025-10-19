@@ -55,6 +55,7 @@ def test_malformed_connection_string_handling(mock_parse_args: Mock) -> None:
             output="drift_report.html",
             source=malformed_string,
             target="sqlite:///target.db",
+            verbose=False,
         )
         mock_parse_args.return_value = mock_args
 
