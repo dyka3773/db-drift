@@ -21,3 +21,13 @@ SUPPORTED_DBMS: list[str] = [
     "sqlite",
     # "oracle",
 ]
+
+
+@unique
+class DBConstraintType(Enum):
+    PRIMARY_KEY = "PRIMARY KEY"
+    FOREIGN_KEY = "FOREIGN KEY"
+    UNIQUE = "UNIQUE"
+    CHECK = "CHECK"
+    NOT_NULL = "NOT NULL"
+    EXCLUSION = "EXCLUSION"  # PostgreSQL specific
