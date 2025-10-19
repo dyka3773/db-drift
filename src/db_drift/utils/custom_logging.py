@@ -54,7 +54,7 @@ def setup_logger(name: str, level: int = logging.INFO) -> logging.Logger:
 
 
 def handle_verbose_logging() -> None:
-    """Adjust the logging level based on the verbose flag."""
+    """Adjust the logging level to DEBUG for verbose output."""
     logger = logging.getLogger("db-drift")
     for handler in logger.handlers:
         if isinstance(handler, logging.StreamHandler):

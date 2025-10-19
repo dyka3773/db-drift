@@ -77,7 +77,7 @@ db-drift --version
 | Option | Description | Default | Required |
 |--------|-------------|---------|----------|
 | `-v`, `--version` | Show version information and exit | - | No |
-| `--dbms` | Specify the type of DBMS | `sqlite` | **Yes** |
+| `--dbms` | Specify the type of DBMS | `sqlite` | No |
 | `-o`, `--output` | Output filename for the drift report | `drift_report.html` | No |
 | `--source` | Connection string for the source database | - | **Yes** |
 | `--target` | Connection string for the target database | - | **Yes** |
