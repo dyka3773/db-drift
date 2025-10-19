@@ -25,6 +25,7 @@ def cli() -> None:
     parser.add_argument(
         "--dbms",
         choices=SUPPORTED_DBMS,
+        required=True,
         help="Specify the type of DBMS (default: sqlite)",
         default="sqlite",
     )
