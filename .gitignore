@@ -194,6 +194,7 @@ cython_debug/
 !.vscode/extensions.json
 !.vscode/*.code-snippets
 !*.code-workspace
+.vscode
 
 # Ruff stuff:
 .ruff_cache/

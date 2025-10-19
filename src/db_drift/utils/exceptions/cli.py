@@ -1,7 +1,7 @@
 """CLI-specific exceptions for db-drift."""
 
+from db_drift.utils.constants import ExitCode
 from db_drift.utils.exceptions.base import DbDriftUserError
-from db_drift.utils.exceptions.status_codes import ExitCode
 
 
 class CliError(DbDriftUserError):

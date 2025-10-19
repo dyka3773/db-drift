@@ -40,6 +40,7 @@ dependencies = [
 
 [project.urls]
 source = "https://github.com/dyka3773/db-drift"
+documentation = "https://dyka3773.github.io/db-drift/"
 
 [project.scripts]
 db-drift = "db_drift:main"
