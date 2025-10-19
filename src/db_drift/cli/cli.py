@@ -52,12 +52,12 @@ def cli() -> None:
         args = parser.parse_args()
         logger.debug(f"Parsed arguments: {args}")
 
-        if args["source"] == args["target"]:
+        if args.source == args.target:
             msg = "Source and target connection strings must be different."
             raise CliUsageError(msg)
 
-        if args["source"].split("://")[0] != args["target"].split("://")[0]:
-            msg = "Source and target databases must be of the same DBMS type."  # As of Issue #50uv tox
+        if args.source.split("://")[0] != args.target.split("://")[0]:
+            msg = "Source and target databases must be of the same DBMS type."  # As of Issue #50
             raise CliArgumentError(msg)
 
     except argparse.ArgumentError as e:
