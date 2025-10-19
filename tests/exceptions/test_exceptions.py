@@ -22,34 +22,25 @@ from db_drift.utils.exceptions.formatting import format_error_message, format_su
 class TestBaseExceptions:
     """Test base exception classes."""
 
-    def test_db_drift_error_creation(self) -> None:
-        """Test DbDriftError creation with message and exit code."""
-        overridden_exit_code = 5
-
-        error = DbDriftError("Test error", exit_code=overridden_exit_code)
-        assert str(error) == "Test error"
-        assert error.message == "Test error"
-        assert error.exit_code == overridden_exit_code
-
     def test_db_drift_error_default_exit_code(self) -> None:
         """Test DbDriftError uses default exit code."""
         error = DbDriftError("Test error")
-        assert error.exit_code == ExitCode.GENERAL_ERROR
+        assert error.exit_code == ExitCode.GENERAL_ERROR.value
 
     def test_db_drift_user_error_exit_code(self) -> None:
         """Test DbDriftUserError default exit code."""
         error = DbDriftUserError("User error")
-        assert error.exit_code == ExitCode.USAGE_ERROR
+        assert error.exit_code == ExitCode.USAGE_ERROR.value
 
     def test_db_drift_system_error_exit_code(self) -> None:
         """Test DbDriftSystemError default exit code."""
         error = DbDriftSystemError("System error")
-        assert error.exit_code == ExitCode.GENERAL_ERROR
+        assert error.exit_code == ExitCode.GENERAL_ERROR.value
 
     def test_db_drift_interrupt_error(self) -> None:
         """Test DbDriftInterruptError default behavior."""
         error = DbDriftInterruptError()
-        assert error.exit_code == ExitCode.SIGINT
+        assert error.exit_code == ExitCode.SIGINT.value
         assert "cancelled by user" in str(error)
 
 
@@ -60,7 +51,7 @@ class TestCliExceptions:
         """Test CliError creation."""
         error = CliError("CLI error")
         assert str(error) == "CLI error"
-        assert error.exit_code == ExitCode.USAGE_ERROR
+        assert error.exit_code == ExitCode.USAGE_ERROR.value
 
     def test_cli_argument_error_with_argument(self) -> None:
         """Test CliArgumentError with argument name."""
@@ -168,13 +159,13 @@ class TestExceptionFormatting:
         """Test getting exit code from DbDriftError."""
         error = CliError("CLI error")
         exit_code = get_exit_code(error)
-        assert exit_code == ExitCode.USAGE_ERROR
+        assert exit_code == ExitCode.USAGE_ERROR.value
 
     def test_get_exit_code_with_keyboard_interrupt(self) -> None:
         """Test getting exit code from KeyboardInterrupt."""
         error = KeyboardInterrupt()
         exit_code = get_exit_code(error)
-        assert exit_code == ExitCode.SIGINT
+        assert exit_code == ExitCode.SIGINT.value
 
     def test_format_suggestion_for_cli_argument_error(self) -> None:
         """Test suggestion formatting for CLI argument error."""

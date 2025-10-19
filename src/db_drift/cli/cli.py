@@ -1,7 +1,7 @@
 import argparse
 import logging
 
-from db_drift.cli.utils import get_version
+from db_drift.cli.utils import check_args_validity, get_version
 from db_drift.utils.constants import SUPPORTED_DBMS
 from db_drift.utils.exceptions import CliArgumentError, CliUsageError
 
@@ -53,13 +53,7 @@ def cli() -> None:
         args = parser.parse_args()
         logger.debug(f"Parsed arguments: {args}")
 
-        if args.source == args.target:
-            msg = "Source and target connection strings must be different."
-            raise CliUsageError(msg)
-
-        if args.source.split("://")[0] != args.target.split("://")[0]:
-            msg = "Source and target databases must be of the same DBMS type."  # As of Issue #50
-            raise CliArgumentError(msg)
+        check_args_validity(args)
 
     except argparse.ArgumentError as e:
         msg = f"Invalid argument: {e}"

@@ -6,7 +6,7 @@ from db_drift.utils.constants import ExitCode
 class DbDriftError(Exception):
     """Base exception for all db-drift related errors."""
 
-    def __init__(self, message: str, exit_code: int = ExitCode.GENERAL_ERROR) -> None:
+    def __init__(self, message: str, exit_code: ExitCode = ExitCode.GENERAL_ERROR) -> None:
         """
         Initialize the exception.
 
@@ -16,7 +16,7 @@ class DbDriftError(Exception):
         """
         super().__init__(message)
         self.message = message
-        self.exit_code = exit_code
+        self.exit_code = exit_code.value
 
     def __str__(self) -> str:
         """Return the error message."""

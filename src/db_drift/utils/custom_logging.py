@@ -30,7 +30,7 @@ def setup_logger(name: str, level: int = logging.INFO) -> logging.Logger:
     if logger.hasHandlers():
         logger.handlers.clear()
 
-    logger.setLevel(level)
+    logger.setLevel(logging.DEBUG)
 
     file_handler = RotatingFileHandler(
         filename=Path(LOGFILES_DIR_NAME) / f"{name}.log",
@@ -42,11 +42,12 @@ def setup_logger(name: str, level: int = logging.INFO) -> logging.Logger:
 
     console_handler = logging.StreamHandler()
     console_handler.setFormatter(formatter)
+    console_handler.setLevel(level)  # Console handler logs from the specified level and above
 
     logger.addHandler(file_handler)
     logger.addHandler(console_handler)
 
     logger.propagate = False  # Prevent log messages from being propagated to the root logger
-    logger.info(f"Logger '{name}' initialized with level {logging.getLevelName(level)}")
+    logger.debug(f"Logger '{name}' initialized with level {logging.getLevelName(level)}")
 
     return logger
