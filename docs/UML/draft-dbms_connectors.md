@@ -6,50 +6,49 @@ config:
 ---
 
 classDiagram
-    class DBConnector {
-        -connection
-        +fetch_schema() DBSchema
-        +connect()
+
+namespace db_drift.db.connectors {
+    class BaseDBConnector {
+        connection_string: str
+        SUPPORTED_OBJECTS_REGISTRY: dict[str, Callable[[], list[DatabaseObject]]]
+        schema_structure: dict
+        connection_library: oracledb | sqlite3 | mysql.connector | psycopg2
+        +fetch_schema_structure() dict
     }
 
     class OracleConnector {
-        +fetch_schema()
-        -fetch_tables()
-        -fetch_views()
-        -fetch_procedures()
-        -fetch_functions()
-        -fetch_packages()
-        -fetch_synonyms()
-        -fetch_sequences()
-        -fetch_triggers()
-        -fetch_constraints()
-        -fetch_indexes()
-        -fetch_materialized_views()
-        -fetch_types()
-        -fetch_editions()
-        -fetch_mining_models()
-        -fetch_index_types()
-        -fetch_operators()
-        -fetch_directories()
+        SUPPORTED_OBJECTS_REGISTRY: dict
+        connection_library= oracledb
     }
-    DBConnector <|-- OracleConnector: is a
 
     class SQLiteConnector {
-        +fetch_schema()
-        ...()
+        SUPPORTED_OBJECTS_REGISTRY: dict
+        connection_library= sqlite3
     }
-    DBConnector <|-- SQLiteConnector: is a
 
     class MySQLConnector {
-        +fetch_schema()
-        ...()
+        SUPPORTED_OBJECTS_REGISTRY: dict
+        connection_library= mysql.connector
     }
-    DBConnector <|-- MySQLConnector: is a
 
     class PostgreSQLConnector {
-        +fetch_schema()
-        ...()
+        SUPPORTED_OBJECTS_REGISTRY: dict
+        connection_library= psycopg2
     }
-    DBConnector <|-- PostgreSQLConnector: is a
+   
+}
 
+BaseDBConnector <|-- OracleConnector: is a
+BaseDBConnector <|-- SQLiteConnector: is a
+BaseDBConnector <|-- MySQLConnector: is a
+BaseDBConnector <|-- PostgreSQLConnector: is a
+
+
+class factory {
+    +get_connector(dbms: str) BaseDBConnector
+}
+
+class main
+main --> factory: uses
+main ..> BaseDBConnector: instantiates
 ```

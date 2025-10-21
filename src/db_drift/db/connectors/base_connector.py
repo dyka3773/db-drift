@@ -6,7 +6,6 @@ class BaseDBConnector:
         self.SUPPORTED_OBJECTS_REGISTRY = {}
         self.schema_structure: dict = {}
         self.connection_library = None  # This will be set in subclasses
-        # Initialize the database connection here in subclasses
 
     def fetch_schema_structure(self) -> dict:
         """

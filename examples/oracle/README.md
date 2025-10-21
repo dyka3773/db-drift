@@ -6,6 +6,7 @@ This directory contains an example setup for using Oracle Database to demonstrat
 ## Table of Contents
 - [SQL](#sql)
 - [Internal Database Structure](#internal-database-structure)
+- [Usage](#usage)
 
 
 ## SQL
@@ -14,3 +15,11 @@ It is the HR example database shipped by Oracle themselves.
 
 ## Internal Database Structure
 The tool's internal database structure created by the example SQL files is shown in the [yaml file here](./db-structure.yml)
+
+## Usage
+To use this example, ensure you have an Oracle Database instance running and accessible.
+You can then run the tool with the appropriate connection strings pointing to your Oracle Database instance.
+eg:
+```bash
+db-drift --source="testadmin/admin@localhost:1521/testpdb" --target="testadmin/admin@localhost:1521/testpdb" --dbms=oracle
+```
