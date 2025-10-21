@@ -1,7 +1,15 @@
 import oracledb
 
 from db_drift.db.connectors.base_connector import BaseDBConnector
-from db_drift.db.strategies.oracle import fetch_oracle_tables, fetch_oracle_views
+from db_drift.db.strategies.oracle import (
+    fetch_oracle_editions,
+    fetch_oracle_indextypes,
+    fetch_oracle_materialized_views,
+    fetch_oracle_mining_models,
+    fetch_oracle_operators,
+    fetch_oracle_tables,
+    fetch_oracle_views,
+)
 
 
 class OracleConnector(BaseDBConnector):
@@ -17,11 +25,11 @@ class OracleConnector(BaseDBConnector):
         self.SUPPORTED_OBJECTS_REGISTRY = {
             "tables": fetch_oracle_tables,
             "views": fetch_oracle_views,
-            # "materialized_views": fetch_oracle_materialized_views,  # noqa: ERA001
-            # "editions": fetch_oracle_editions,  # noqa: ERA001
-            # "mining_models": fetch_oracle_mining_models,  # noqa: ERA001
-            # "indextypes": fetch_oracle_indextypes,  # noqa: ERA001
-            # "operators": fetch_oracle_operators,  # noqa: ERA001
+            "materialized_views": fetch_oracle_materialized_views,
+            "editions": fetch_oracle_editions,
+            "mining_models": fetch_oracle_mining_models,
+            "indextypes": fetch_oracle_indextypes,
+            "operators": fetch_oracle_operators,
             # "triggers": fetch_oracle_triggers,  # noqa: ERA001
             # "indexes": fetch_oracle_indexes,  # noqa: ERA001
             # "constraints": fetch_oracle_constraints,  # noqa: ERA001
