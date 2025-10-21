@@ -11,7 +11,6 @@ class View(
 ): ...
 
 
-# View inherits all attributes from DatabaseObjectWithColumns
+# View inherits all attributes from DatabaseObjectWithColumns and DatabaseObjectWithDoc,
 # which includes:
-# - name: str
 # - columns: list[Column]

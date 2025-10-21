@@ -9,7 +9,6 @@ class Package(DatabaseObjectWithHashedBody): ...
 
 # Package inherits all attributes from DatabaseObjectWithHashableBody
 # which includes:
-# - name: str
 # - body: str
 # - definition: str
 

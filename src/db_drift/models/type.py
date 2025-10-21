@@ -9,7 +9,6 @@ class Type(DatabaseObjectWithDefinition): ...
 
 # Type inherits all attributes from DatabaseObjectWithDefinition
 # which includes:
-# - name: str
 # - definition: str
 
 # NOTE: Type's definition IS EXPECTED to be hashed

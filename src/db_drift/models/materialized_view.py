@@ -11,7 +11,6 @@ class MaterializedView(
 ): ...
 
 
-# MaterializedView inherits all attributes from DatabaseObjectWithColumns
+# MaterializedView inherits all attributes from DatabaseObjectWithColumns and DatabaseObjectWithDoc,
 # which includes:
-# - name: str
 # - columns: list[Column]

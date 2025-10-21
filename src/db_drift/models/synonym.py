@@ -9,5 +9,4 @@ class Synonym(DatabaseObjectWithDefinition): ...
 
 # Synonym inherits all attributes from DatabaseObjectWithDefinition
 # which includes:
-# - name: str
 # - definition: str

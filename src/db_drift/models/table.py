@@ -11,7 +11,6 @@ class Table(
 ): ...
 
 
-# Table inherits all attributes from DatabaseObjectWithColumns
+# Table inherits all attributes from DatabaseObjectWithColumns and DatabaseObjectWithDoc,
 # which includes:
-# - name: str
 # - columns: list[Column]

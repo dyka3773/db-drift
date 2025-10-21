@@ -5,13 +5,6 @@ from dataclasses import dataclass
 class DatabaseObject:
     """Base class for all database objects."""
 
-    name: str
-
-    def __post_init__(self) -> None:
-        """Post-initialization processing."""
-        # This is kept here for potential future use and because DatabaseObjectWithColumns calls it
-        pass
-
 
 @dataclass
 class DatabaseObjectWithDoc(DatabaseObject):
