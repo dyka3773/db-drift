@@ -10,6 +10,10 @@
 
 line-length = 150 # Default line length for all linters
 
+extend-exclude = [
+    "examples/*",
+]
+
 lint.extend-select = [
     "E",        # Pycodestyle errors (style issues)
     "W",        # Pycodestyle warnings (style issues)

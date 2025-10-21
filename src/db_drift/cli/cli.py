@@ -2,14 +2,20 @@ import argparse
 import logging
 
 from db_drift.cli.utils import check_args_validity, get_version
-from db_drift.utils.constants import SUPPORTED_DBMS
+from db_drift.utils.constants import SUPPORTED_DBMS_REGISTRY
 from db_drift.utils.custom_logging import handle_verbose_logging
 from db_drift.utils.exceptions import CliArgumentError, CliUsageError
 
 logger = logging.getLogger("db-drift")
 
 
-def cli() -> None:
+def cli_arg_parse() -> argparse.Namespace:
+    """
+    Parse command-line arguments for the db-drift tool.
+
+    Returns:
+        argparse.Namespace: The parsed command-line arguments.
+    """
     parser = argparse.ArgumentParser(
         prog="db-drift",
         description="A command-line tool to visualize the differences between two DB states.",
@@ -25,8 +31,8 @@ def cli() -> None:
 
     parser.add_argument(
         "--dbms",
-        choices=SUPPORTED_DBMS,
-        help="Specify the type of DBMS (default: sqlite)",
+        choices=SUPPORTED_DBMS_REGISTRY.keys(),
+        help="Specify the type of DBMS for both source and target databases (default: sqlite)",
         default="sqlite",
     )
 
@@ -76,3 +82,5 @@ def cli() -> None:
             raise CliUsageError(msg) from e
         # Re-raise if it's a successful exit (like --help)
         raise
+
+    return args
