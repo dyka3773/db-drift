@@ -3,11 +3,13 @@ import oracledb
 from db_drift.db.connectors.base_connector import BaseDBConnector
 from db_drift.db.strategies.oracle import (
     fetch_oracle_editions,
+    fetch_oracle_indexes,
     fetch_oracle_indextypes,
     fetch_oracle_materialized_views,
     fetch_oracle_mining_models,
     fetch_oracle_operators,
     fetch_oracle_tables,
+    fetch_oracle_triggers,
     fetch_oracle_views,
 )
 
@@ -30,8 +32,8 @@ class OracleConnector(BaseDBConnector):
             "mining_models": fetch_oracle_mining_models,
             "indextypes": fetch_oracle_indextypes,
             "operators": fetch_oracle_operators,
-            # "triggers": fetch_oracle_triggers,  # noqa: ERA001
-            # "indexes": fetch_oracle_indexes,  # noqa: ERA001
+            "triggers": fetch_oracle_triggers,
+            "indexes": fetch_oracle_indexes,
             # "constraints": fetch_oracle_constraints,  # noqa: ERA001
             # "sequences": fetch_oracle_sequences,  # noqa: ERA001
             # "synonyms": fetch_oracle_synonyms,  # noqa: ERA001

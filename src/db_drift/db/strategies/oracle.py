@@ -3,12 +3,15 @@ from sqlalchemy import Row
 
 from db_drift.models.column import Column
 from db_drift.models.edition import Edition
+from db_drift.models.index import Index
 from db_drift.models.indextype import IndexType
 from db_drift.models.materialized_view import MaterializedView
 from db_drift.models.mining_model import MiningModel
 from db_drift.models.operator import Operator
 from db_drift.models.table import Table
+from db_drift.models.trigger import Trigger
 from db_drift.models.view import View
+from db_drift.utils.string import hash_body
 
 
 def fetch_oracle_tables(cursor: cursor.Cursor) -> dict[str, Table]:
@@ -358,3 +361,103 @@ def fetch_oracle_operators(cursor: cursor.Cursor) -> dict[str, Operator]:
     }
 
     return operators
+
+
+def fetch_oracle_triggers(cursor: cursor.Cursor) -> dict[str, Trigger]:
+    """
+    Fetch the list of triggers from the Oracle database available to the connected user.
+
+    Args:
+        cursor (cursor.Cursor): The Oracle database cursor.
+
+    Returns:
+        dict[str, Trigger]: A dictionary of Trigger objects representing the triggers in the database.
+    """
+    select_triggers = """
+        SELECT
+            trigger_name,
+            trigger_type,
+            table_name,
+            column_name,
+            trigger_body
+        FROM all_triggers
+        WHERE trigger_name NOT LIKE '%$%'
+            AND owner NOT IN (
+                SELECT DISTINCT username
+                FROM all_users
+                WHERE ORACLE_MAINTAINED = 'Y'
+            )
+            AND table_name NOT LIKE '%$%'
+            AND table_owner NOT IN (
+                SELECT DISTINCT username
+                FROM all_users
+                WHERE ORACLE_MAINTAINED = 'Y'
+            )
+        ORDER BY table_name, trigger_name
+    """
+    cursor.execute(select_triggers)
+    trigger_rows = cursor.fetchall()
+    triggers: dict[str, Trigger] = {
+        row[0]: Trigger(
+            body=hash_body(row[4]),
+            definition=f"{row[1]} ({row[2]}{'.' + row[3] if row[3] else ''})",
+        )
+        for row in trigger_rows
+    }
+
+    return triggers
+
+
+def fetch_oracle_indexes(cursor: cursor.Cursor) -> dict[str, Index]:
+    """
+    Fetch the list of indexes from the Oracle database available to the connected user.
+
+    Args:
+        cursor (cursor.Cursor): The Oracle database cursor.
+
+    Returns:
+        dict[str, Index]: A dictionary of Index objects representing the indexes in the database.
+    """
+    select_indexes = """
+        SELECT
+            ai.index_name,
+            ai.table_name,
+            ai.uniqueness,
+            ai.tablespace_name,
+            aic.column_name
+        FROM all_indexes ai
+        JOIN all_ind_columns aic ON ai.index_name = aic.index_name AND ai.table_name = aic.table_name
+        WHERE ai.index_name NOT LIKE '%$%'
+            AND ai.owner NOT IN (
+                SELECT DISTINCT username
+                FROM all_users
+                WHERE ORACLE_MAINTAINED = 'Y'
+            )
+            AND ai.table_name NOT LIKE '%$%'
+            AND ai.index_name NOT LIKE '%SYS_%'
+            ORDER BY ai.table_name, ai.index_name, aic.column_position
+    """
+    cursor.execute(select_indexes)
+    index_rows = cursor.fetchall()
+    indexes: dict[str, Index] = {}
+
+    for row in index_rows:
+        index_name = row[0]
+
+        # The above query returns multiple rows per index (one per column),
+        # so we need to aggregate them into a single Index object.
+        if index_name not in indexes:
+            indexes[index_name] = Index(
+                table_name=row[1],
+                uniqueness=row[2],
+                tablespace=row[3],
+                columns={},
+            )
+
+        indexes[index_name].columns[row[4]] = Column(
+            doc="",
+            data_type="",
+            is_nullable=None,
+        )
+
+    return indexes
