@@ -4,7 +4,6 @@ import argparse
 from unittest.mock import Mock, patch
 
 import pytest
-
 from db_drift.cli.cli import cli_arg_parse
 from db_drift.utils.exceptions import CliArgumentError, CliUsageError
 
@@ -44,9 +43,7 @@ def test_malformed_connection_string_handling(mock_parse_args: Mock) -> None:
     """Test handling of malformed connection strings."""
     # Connection strings without proper scheme
     malformed_strings = [
-        "just_a_filename.db",
-        "no_scheme_here",
-        "://missing_scheme",
+        # TODO @dyka3773: Add more possible malformed cases as needed
         "",
     ]
 

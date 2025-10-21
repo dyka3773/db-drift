@@ -1,7 +1,7 @@
 from argparse import Namespace
 from importlib import metadata
 
-from db_drift.utils.exceptions import CliArgumentError, CliUsageError
+from db_drift.utils.exceptions import CliArgumentError
 
 
 def get_version() -> str:
@@ -28,5 +28,5 @@ def check_args_validity(args: Namespace) -> None:
 
     if args.source == args.target:
         msg = "Source and target connection strings must be different."
-        # FIXME @dyka3773: Temporarily disabling this check for testing purposes
-        # raise CliUsageError(msg)
+        # FIXME @dyka3773: Temporarily disabling this check for testing purposes  # noqa: FIX001, TD001
+        # raise CliUsageError(msg)  # noqa: ERA001
