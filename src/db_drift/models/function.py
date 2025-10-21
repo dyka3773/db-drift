@@ -7,7 +7,7 @@ from db_drift.models.abstract_models import DatabaseObjectWithHashedBody
 class Function(DatabaseObjectWithHashedBody): ...
 
 
-# Function inherits all attributes from DatabaseObjectWithHashableBody
+# Function inherits all attributes from DatabaseObjectWithHashedBody
 # which includes:
 # - body: str
 # - definition: str

@@ -66,7 +66,7 @@ def fetch_oracle_views(cursor: cursor.Cursor) -> dict[str, View]:
             views[view_name].columns[col[1]] = Column(
                 doc=col[2],
                 data_type=col[4],  # TODO @dyka3773: Add length/precision info from col[6] if needed  # noqa: FIX002
-                is_nullable=(col[5] == "Y"),  # Oracle uses 'Y'
+                is_nullable=(col[5] == "Y"),  # Oracle uses 'Y'/'N' for nullable
             )
 
     return views
