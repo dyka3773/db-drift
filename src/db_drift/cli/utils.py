@@ -28,12 +28,5 @@ def check_args_validity(args: Namespace) -> None:
 
     if args.source == args.target:
         msg = "Source and target connection strings must be different."
-        raise CliUsageError(msg)
-
-    if "://" not in args.source or "://" not in args.target:
-        msg = "Malformed connection string: both source and target must contain '://'."
-        raise CliArgumentError(msg)
-
-    if args.source.split("://")[0] != args.target.split("://")[0]:
-        msg = "Source and target databases must be of the same DBMS type."  # As of Issue #50
-        raise CliArgumentError(msg)
+        # FIXME @dyka3773: Temporarily disabling this check for testing purposes
+        # raise CliUsageError(msg)

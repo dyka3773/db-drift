@@ -1,23 +1,23 @@
-from typing import override
+import sqlite3
 
 from db_drift.db.connectors.base_connector import BaseDBConnector
 
 
 class SQLiteConnector(BaseDBConnector):
-    @override
-    def fetch_schema_structure(self) -> dict:
+    def __init__(self, connection_string: str) -> None:
         """
-        Fetch the database schema structure for SQLite.
+        Initialize the SQLiteConnector with a connection string.
 
-        Returns:
-            dict: A dictionary representing the database schema structure.
+        Args:
+            connection_string (str): The connection string for the SQLite database.
         """
-        # Implementation for fetching SQLite schema structure goes here.
-        # This is a placeholder implementation.
-        schema_structure = {
-            "tables": [],
-            "views": [],
-            "indexes": [],
-            "triggers": [],
+        super().__init__(connection_string)
+
+        self.SUPPORTED_OBJECTS_REGISTRY = {
+            # "tables": self.fetch_sqlite_tables,  # noqa: ERA001
+            # "views": self.fetch_sqlite_views,  # noqa: ERA001
+            # "indexes": self.fetch_sqlite_indexes,  # noqa: ERA001
+            # "triggers": self.fetch_sqlite_triggers,  # noqa: ERA001
         }
-        return schema_structure  # noqa: RET504
+
+        self.connection_library = sqlite3

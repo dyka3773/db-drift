@@ -1,6 +1,6 @@
 from dataclasses import dataclass
 
-from db_drift.models.abstract_models import DatabaseObjectIndexLike
+from db_drift.models.complex_abstract_models import DatabaseObjectIndexLike
 from db_drift.utils.constants import DBConstraintType
 
 

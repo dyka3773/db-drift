@@ -2,7 +2,8 @@ import argparse
 from unittest.mock import Mock, patch
 
 import pytest
-from db_drift.cli.cli import cli
+
+from db_drift.cli.cli import cli_arg_parse
 from db_drift.utils.exceptions.cli import CliArgumentError, CliUsageError
 
 
@@ -19,7 +20,7 @@ def test_source_and_target_same_value_error(mock_parse_args: Mock) -> None:
     mock_parse_args.return_value = mock_args
 
     with pytest.raises(CliUsageError, match="Source and target connection strings must be different"):
-        cli()
+        cli_arg_parse()
 
 
 @patch("db_drift.cli.cli.argparse.ArgumentParser.parse_args")
@@ -42,4 +43,4 @@ def test_source_and_target_different_dbms_error(mock_parse_args: Mock) -> None:
         mock_parse_args.return_value = mock_args
 
         with pytest.raises(CliArgumentError, match="Source and target databases must be of the same DBMS type"):
-            cli()
+            cli_arg_parse()

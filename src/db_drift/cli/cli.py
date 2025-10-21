@@ -2,8 +2,6 @@ import argparse
 import logging
 
 from db_drift.cli.utils import check_args_validity, get_version
-from db_drift.db.factory import get_connector
-from db_drift.report.generate import generate_drift_report
 from db_drift.utils.constants import SUPPORTED_DBMS_REGISTRY
 from db_drift.utils.custom_logging import handle_verbose_logging
 from db_drift.utils.exceptions import CliArgumentError, CliUsageError
@@ -11,7 +9,13 @@ from db_drift.utils.exceptions import CliArgumentError, CliUsageError
 logger = logging.getLogger("db-drift")
 
 
-def cli() -> None:
+def cli_arg_parse() -> argparse.Namespace:
+    """
+    Parse command-line arguments for the db-drift tool.
+
+    Returns:
+        argparse.Namespace: The parsed command-line arguments.
+    """
     parser = argparse.ArgumentParser(
         prog="db-drift",
         description="A command-line tool to visualize the differences between two DB states.",
@@ -28,7 +32,7 @@ def cli() -> None:
     parser.add_argument(
         "--dbms",
         choices=SUPPORTED_DBMS_REGISTRY.keys(),
-        help="Specify the type of DBMS (default: sqlite)",
+        help="Specify the type of DBMS for both source and target databases (default: sqlite)",
         default="sqlite",
     )
 
@@ -68,21 +72,6 @@ def cli() -> None:
 
         check_args_validity(args)
 
-        connector = get_connector(args.dbms)
-
-        db_structure_source = connector(args.source).fetch_schema_structure()
-        logger.info("Fetched source database schema structure.")
-
-        db_structure_target = connector(args.target).fetch_schema_structure()
-        logger.info("Fetched target database schema structure.")
-
-        logger.info("Generating drift report...")
-        generate_drift_report(
-            db_structure_source,
-            db_structure_target,
-            args.output,
-        )
-
     except argparse.ArgumentError as e:
         msg = f"Invalid argument: {e}"
         raise CliArgumentError(msg) from e
@@ -93,3 +82,5 @@ def cli() -> None:
             raise CliUsageError(msg) from e
         # Re-raise if it's a successful exit (like --help)
         raise
+
+    return args

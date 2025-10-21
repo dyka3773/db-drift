@@ -1,10 +1,14 @@
 from dataclasses import dataclass
 
-from db_drift.models.abstract_models import DatabaseObjectWithColumns
+from db_drift.models.abstract_models import DatabaseObjectWithDoc
+from db_drift.models.complex_abstract_models import DatabaseObjectWithColumns
 
 
 @dataclass
-class View(DatabaseObjectWithColumns): ...
+class View(
+    DatabaseObjectWithDoc,
+    DatabaseObjectWithColumns,
+): ...
 
 
 # View inherits all attributes from DatabaseObjectWithColumns
