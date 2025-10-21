@@ -2,7 +2,9 @@ import argparse
 import logging
 
 from db_drift.cli.utils import check_args_validity, get_version
-from db_drift.utils.constants import SUPPORTED_DBMS
+from db_drift.db.factory import get_connector
+from db_drift.report.generate import generate_drift_report
+from db_drift.utils.constants import SUPPORTED_DBMS_REGISTRY
 from db_drift.utils.custom_logging import handle_verbose_logging
 from db_drift.utils.exceptions import CliArgumentError, CliUsageError
 
@@ -25,7 +27,7 @@ def cli() -> None:
 
     parser.add_argument(
         "--dbms",
-        choices=SUPPORTED_DBMS,
+        choices=SUPPORTED_DBMS_REGISTRY.keys(),
         help="Specify the type of DBMS (default: sqlite)",
         default="sqlite",
     )
@@ -65,6 +67,21 @@ def cli() -> None:
         logger.debug(f"Parsed arguments: {args}")
 
         check_args_validity(args)
+
+        connector = get_connector(args.dbms)
+
+        db_structure_source = connector(args.source).fetch_schema_structure()
+        logger.info("Fetched source database schema structure.")
+
+        db_structure_target = connector(args.target).fetch_schema_structure()
+        logger.info("Fetched target database schema structure.")
+
+        logger.info("Generating drift report...")
+        generate_drift_report(
+            db_structure_source,
+            db_structure_target,
+            args.output,
+        )
 
     except argparse.ArgumentError as e:
         msg = f"Invalid argument: {e}"

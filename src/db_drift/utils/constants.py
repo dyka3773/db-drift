@@ -1,5 +1,9 @@
 from enum import Enum, unique
 
+from db_drift.db.connectors.base_connector import BaseDBConnector
+from db_drift.db.connectors.oracle import OracleConnector
+from db_drift.db.connectors.sqlite import SQLiteConnector
+
 
 @unique
 class ExitCode(Enum):
@@ -15,12 +19,14 @@ class ExitCode(Enum):
     SIGINT = 130
 
 
-SUPPORTED_DBMS: list[str] = [
-    # "postgresql",
-    # "mysql",
-    "sqlite",
-    # "oracle",
-]
+# An easy-to-update registry pattern for supported DBMS connectors
+SUPPORTED_DBMS_REGISTRY: dict[str, BaseDBConnector] = {
+    "sqlite": SQLiteConnector,
+    "oracle": OracleConnector,
+    # As we add more connectors, uncomment the lines below
+    # "postgresql": PostgresConnector,  # noqa: ERA001
+    # "mysql": MySQLConnector,  # noqa: ERA001
+}
 
 
 @unique
