@@ -206,3 +206,8 @@ cython_debug/
 *.db-journal
 *.db-journal-*
 *.sqlite3-journal
+
+# SQLite database files
+*.sqlite3
+*.db
+*.sqlite
