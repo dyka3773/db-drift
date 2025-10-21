@@ -2,7 +2,7 @@ import argparse
 import contextlib
 from unittest.mock import Mock, patch
 
-from db_drift.cli.cli import cli
+from db_drift.cli.cli import cli_arg_parse
 
 
 @patch("db_drift.cli.cli.argparse.ArgumentParser.parse_args")
@@ -18,7 +18,7 @@ def test_output_argument_default_value(mock_parse_args: Mock) -> None:
     mock_parse_args.return_value = mock_args
 
     with contextlib.suppress(SystemExit):
-        cli()
+        cli_arg_parse()
 
 
 @patch("db_drift.cli.cli.argparse.ArgumentParser.parse_args")
@@ -42,4 +42,4 @@ def test_output_argument_custom_value(mock_parse_args: Mock) -> None:
         mock_parse_args.return_value = mock_args
 
         with contextlib.suppress(SystemExit):
-            cli()
+            cli_arg_parse()

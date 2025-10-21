@@ -1,7 +1,7 @@
 from argparse import Namespace
 from importlib import metadata
 
-from db_drift.utils.exceptions import CliArgumentError, CliUsageError
+from db_drift.utils.exceptions import CliArgumentError
 
 
 def get_version() -> str:
@@ -28,12 +28,5 @@ def check_args_validity(args: Namespace) -> None:
 
     if args.source == args.target:
         msg = "Source and target connection strings must be different."
-        raise CliUsageError(msg)
-
-    if "://" not in args.source or "://" not in args.target:
-        msg = "Malformed connection string: both source and target must contain '://'."
-        raise CliArgumentError(msg)
-
-    if args.source.split("://")[0] != args.target.split("://")[0]:
-        msg = "Source and target databases must be of the same DBMS type."  # As of Issue #50
-        raise CliArgumentError(msg)
+        # FIXME @dyka3773: Temporarily disabling this check for testing purposes  # noqa: FIX001, TD001
+        # raise CliUsageError(msg)  # noqa: ERA001

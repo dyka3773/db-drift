@@ -1,4 +1,6 @@
-from db_drift.cli.cli import cli
+from db_drift.cli.cli import cli_arg_parse
+from db_drift.db.factory import get_connector
+from db_drift.report.generate import generate_drift_report
 from db_drift.utils import custom_logging
 from db_drift.utils.constants import ExitCode
 from db_drift.utils.exceptions import CliError, ConfigError, DatabaseError, DbDriftError, DbDriftInterruptError
@@ -12,7 +14,22 @@ def main() -> None:
     """Entry point for the db-drift package."""
     try:
         logger.debug("Starting db-drift CLI")
-        cli()
+        args = cli_arg_parse()
+
+        connector = get_connector(args.dbms)
+
+        db_structure_source = connector(args.source).fetch_schema_structure()
+        logger.info("Fetched source database schema structure.")
+
+        db_structure_target = connector(args.target).fetch_schema_structure()
+        logger.info("Fetched target database schema structure.")
+
+        logger.info("Generating drift report...")
+        generate_drift_report(
+            db_structure_source,
+            db_structure_target,
+            args.output,
+        )
 
     except KeyboardInterrupt:
         # Handle Ctrl+C gracefully

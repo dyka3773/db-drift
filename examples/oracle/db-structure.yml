@@ -1,0 +1,403 @@
+tables:
+- TESTADMIN.COUNTRIES:
+    comment: country table. References with locations table.
+    def:
+    - COUNTRY_ID:
+        comment: Primary key of countries table.
+        def: CHAR NOT NULL
+    - COUNTRY_NAME:
+        comment: Country name
+        def: VARCHAR2(60)
+    - REGION_ID:
+        comment: Region ID for the country. Foreign key to region_id column in the
+          departments table.
+        def: NUMBER
+- TESTADMIN.DEPARTMENTS:
+    comment: "Departments table that shows details of departments where employees\
+      \ \nwork. references with locations, employees, and job_history tables."
+    def:
+    - DEPARTMENT_ID:
+        comment: Primary key column of departments table.
+        def: NUMBER NOT NULL
+    - DEPARTMENT_NAME:
+        comment: "A not null column that shows name of a department. Administration,\
+          \ \nMarketing, Purchasing, Human Resources, Shipping, IT, Executive, Public\
+          \ \nRelations, Sales, Finance, and Accounting. "
+        def: VARCHAR2(30) NOT NULL
+    - LOCATION_ID:
+        comment: Location id where a department is located. Foreign key to location_id
+          column of locations table.
+        def: NUMBER
+    - MANAGER_ID:
+        comment: Manager_id of a department. Foreign key to employee_id column of
+          employees table. The manager_id column of the employee table references
+          this column.
+        def: NUMBER
+- TESTADMIN.EMPLOYEES:
+    comment: 'employees table. References with departments,
+
+      jobs, job_history tables. Contains a self reference.'
+    def:
+    - COMMISSION_PCT:
+        comment: "Commission percentage of the employee; Only employees in sales \n\
+          department eligible for commission percentage"
+        def: NUMBER
+    - DEPARTMENT_ID:
+        comment: "Department id where employee works; foreign key to department_id\
+          \ \ncolumn of the departments table"
+        def: NUMBER
+    - EMAIL:
+        comment: Email id of the employee
+        def: VARCHAR2(25) NOT NULL
+    - EMPLOYEE_ID:
+        comment: Primary key of employees table.
+        def: NUMBER NOT NULL
+    - FIRST_NAME:
+        comment: First name of the employee. A not null column.
+        def: VARCHAR2(20)
+    - HIRE_DATE:
+        comment: Date when the employee started on this job. A not null column.
+        def: DATE NOT NULL
+    - JOB_ID:
+        comment: "Current job of the employee; foreign key to job_id column of the\
+          \ \njobs table. A not null column."
+        def: VARCHAR2(10) NOT NULL
+    - LAST_NAME:
+        comment: Last name of the employee. A not null column.
+        def: VARCHAR2(25) NOT NULL
+    - MANAGER_ID:
+        comment: "Manager id of the employee; has same domain as manager_id in \n\
+          departments table. Foreign key to employee_id column of employees table.\
+          \ \n(useful for reflexive joins and CONNECT BY query)"
+        def: NUMBER
+    - PHONE_NUMBER:
+        comment: Phone number of the employee; includes country code and area code
+        def: VARCHAR2(20)
+    - SALARY:
+        comment: "Monthly salary of the employee. Must be greater \nthan zero (enforced\
+          \ by constraint emp_salary_min)"
+        def: NUMBER
+- TESTADMIN.JOBS:
+    comment: 'jobs table with job titles and salary ranges.
+
+      References with employees and job_history table.'
+    def:
+    - JOB_ID:
+        comment: Primary key of jobs table.
+        def: VARCHAR2(10) NOT NULL
+    - JOB_TITLE:
+        comment: A not null column that shows job title, e.g. AD_VP, FI_ACCOUNTANT
+        def: VARCHAR2(35) NOT NULL
+    - MAX_SALARY:
+        comment: Maximum salary for a job title
+        def: NUMBER
+    - MIN_SALARY:
+        comment: Minimum salary for a job title.
+        def: NUMBER
+- TESTADMIN.JOB_HISTORY:
+    comment: "Table that stores job history of the employees. If an employee \nchanges\
+      \ departments within the job or changes jobs within the department, \nnew rows\
+      \ get inserted into this table with old job information of the \nemployee. Contains\
+      \ a complex primary key: employee_id+start_date.\nReferences with jobs, employees,\
+      \ and departments tables."
+    def:
+    - DEPARTMENT_ID:
+        comment: Department id in which the employee worked in the past; foreign key
+          to department_id column in the departments table
+        def: NUMBER
+    - EMPLOYEE_ID:
+        comment: "A not null column in the complex primary key employee_id+start_date.\
+          \ \nForeign key to employee_id column of the employee table"
+        def: NUMBER NOT NULL
+    - END_DATE:
+        comment: "Last day of the employee in this job role. A not null column. Must\
+          \ be \ngreater than the start_date of the job_history table. \n(enforced\
+          \ by constraint jhist_date_interval)"
+        def: DATE NOT NULL
+    - JOB_ID:
+        comment: "Job role in which the employee worked in the past; foreign key to\
+          \ \njob_id column in the jobs table. A not null column."
+        def: VARCHAR2(10) NOT NULL
+    - START_DATE:
+        comment: "A not null column in the complex primary key employee_id+start_date.\
+          \ \nMust be less than the end_date of the job_history table. (enforced by\
+          \ \nconstraint jhist_date_interval)"
+        def: DATE NOT NULL
+- TESTADMIN.LOCATIONS:
+    comment: 'Locations table that contains specific address of a specific office,
+
+      warehouse, and/or production site of a company. Does not store addresses /
+
+      locations of customers. references with the departments and countries tables. '
+    def:
+    - CITY:
+        comment: "A not null column that shows city where an office, warehouse, or\
+          \ \nproduction site of a company is located. "
+        def: VARCHAR2(30) NOT NULL
+    - COUNTRY_ID:
+        comment: 'Country where an office, warehouse, or production site of a company
+          is
+
+          located. Foreign key to country_id column of the countries table.'
+        def: CHAR
+    - LOCATION_ID:
+        comment: Primary key of locations table
+        def: NUMBER NOT NULL
+    - POSTAL_CODE:
+        comment: "Postal code of the location of an office, warehouse, or production\
+          \ site \nof a company. "
+        def: VARCHAR2(12)
+    - STATE_PROVINCE:
+        comment: "State or Province where an office, warehouse, or production site\
+          \ of a \ncompany is located."
+        def: VARCHAR2(25)
+    - STREET_ADDRESS:
+        comment: 'Street address of an office, warehouse, or production site of a
+          company.
+
+          Contains building number and street name'
+        def: VARCHAR2(40)
+- TESTADMIN.REGIONS:
+    comment: Regions table that contains region numbers and names. references with
+      the Countries table.
+    def:
+    - REGION_ID:
+        comment: Primary key of regions table.
+        def: NUMBER NOT NULL
+    - REGION_NAME:
+        comment: Names of regions. Locations are in the countries of these regions.
+        def: VARCHAR2(25)
+views:
+- TESTADMIN.EMP_DETAILS_VIEW:
+    comment: ''
+    def:
+    - CITY:
+        comment: ''
+        def: VARCHAR2(30) NOT NULL
+    - COMMISSION_PCT:
+        comment: ''
+        def: NUMBER
+    - COUNTRY_ID:
+        comment: ''
+        def: CHAR
+    - COUNTRY_NAME:
+        comment: ''
+        def: VARCHAR2(60)
+    - DEPARTMENT_ID:
+        comment: ''
+        def: NUMBER
+    - DEPARTMENT_NAME:
+        comment: ''
+        def: VARCHAR2(30) NOT NULL
+    - EMPLOYEE_ID:
+        comment: ''
+        def: NUMBER NOT NULL
+    - FIRST_NAME:
+        comment: ''
+        def: VARCHAR2(20)
+    - JOB_ID:
+        comment: ''
+        def: VARCHAR2(10) NOT NULL
+    - JOB_TITLE:
+        comment: ''
+        def: VARCHAR2(35) NOT NULL
+    - LAST_NAME:
+        comment: ''
+        def: VARCHAR2(25) NOT NULL
+    - LOCATION_ID:
+        comment: ''
+        def: NUMBER
+    - MANAGER_ID:
+        comment: ''
+        def: NUMBER
+    - REGION_NAME:
+        comment: ''
+        def: VARCHAR2(25)
+    - SALARY:
+        comment: ''
+        def: NUMBER
+    - STATE_PROVINCE:
+        comment: ''
+        def: VARCHAR2(25)
+triggers:
+- SECURE_EMPLOYEES:
+    hash: 1f14d0b6d8a0b241466c9b678ef4496b
+    def: BEFORE STATEMENT (EMPLOYEES)
+- UPDATE_JOB_HISTORY:
+    hash: 7f6458907a318a244d30e5a569190168
+    def: AFTER EACH ROW (EMPLOYEES)
+indexes:
+- COUNTRY_C_ID_PK:
+    def: 'table: COUNTRIES, columns: [COUNTRY_ID], uniqueness: UNIQUE, prefix_length:
+      None, tablespace: USERS'
+- DEPT_ID_PK:
+    def: 'table: DEPARTMENTS, columns: [DEPARTMENT_ID], uniqueness: UNIQUE, prefix_length:
+      None, tablespace: USERS'
+- DEPT_LOCATION_IX:
+    def: 'table: DEPARTMENTS, columns: [LOCATION_ID], uniqueness: NONUNIQUE, prefix_length:
+      None, tablespace: USERS'
+- EMP_DEPARTMENT_IX:
+    def: 'table: EMPLOYEES, columns: [DEPARTMENT_ID], uniqueness: NONUNIQUE, prefix_length:
+      None, tablespace: USERS'
+- EMP_EMAIL_UK:
+    def: 'table: EMPLOYEES, columns: [EMAIL], uniqueness: UNIQUE, prefix_length: None,
+      tablespace: USERS'
+- EMP_EMP_ID_PK:
+    def: 'table: EMPLOYEES, columns: [EMPLOYEE_ID], uniqueness: UNIQUE, prefix_length:
+      None, tablespace: USERS'
+- EMP_JOB_IX:
+    def: 'table: EMPLOYEES, columns: [JOB_ID], uniqueness: NONUNIQUE, prefix_length:
+      None, tablespace: USERS'
+- EMP_MANAGER_IX:
+    def: 'table: EMPLOYEES, columns: [MANAGER_ID], uniqueness: NONUNIQUE, prefix_length:
+      None, tablespace: USERS'
+- EMP_NAME_IX:
+    def: 'table: EMPLOYEES, columns: [LAST_NAME, FIRST_NAME], uniqueness: NONUNIQUE,
+      prefix_length: None, tablespace: USERS'
+- JOB_ID_PK:
+    def: 'table: JOBS, columns: [JOB_ID], uniqueness: UNIQUE, prefix_length: None,
+      tablespace: USERS'
+- JHIST_DEPARTMENT_IX:
+    def: 'table: JOB_HISTORY, columns: [DEPARTMENT_ID], uniqueness: NONUNIQUE, prefix_length:
+      None, tablespace: USERS'
+- JHIST_EMPLOYEE_IX:
+    def: 'table: JOB_HISTORY, columns: [EMPLOYEE_ID], uniqueness: NONUNIQUE, prefix_length:
+      None, tablespace: USERS'
+- JHIST_EMP_ID_ST_DATE_PK:
+    def: 'table: JOB_HISTORY, columns: [EMPLOYEE_ID, START_DATE], uniqueness: UNIQUE,
+      prefix_length: None, tablespace: USERS'
+- JHIST_JOB_IX:
+    def: 'table: JOB_HISTORY, columns: [JOB_ID], uniqueness: NONUNIQUE, prefix_length:
+      None, tablespace: USERS'
+- LOC_CITY_IX:
+    def: 'table: LOCATIONS, columns: [CITY], uniqueness: NONUNIQUE, prefix_length:
+      None, tablespace: USERS'
+- LOC_COUNTRY_IX:
+    def: 'table: LOCATIONS, columns: [COUNTRY_ID], uniqueness: NONUNIQUE, prefix_length:
+      None, tablespace: USERS'
+- LOC_ID_PK:
+    def: 'table: LOCATIONS, columns: [LOCATION_ID], uniqueness: UNIQUE, prefix_length:
+      None, tablespace: USERS'
+- LOC_STATE_PROVINCE_IX:
+    def: 'table: LOCATIONS, columns: [STATE_PROVINCE], uniqueness: NONUNIQUE, prefix_length:
+      None, tablespace: USERS'
+- REG_ID_PK:
+    def: 'table: REGIONS, columns: [REGION_ID], uniqueness: UNIQUE, prefix_length:
+      None, tablespace: USERS'
+constraints:
+- COUNTRY_C_ID_PK:
+    def: 'table: COUNTRIES, columns: [COUNTRY_ID], type: PRIMARY KEY'
+- COUNTRY_ID_NN:
+    def: 'table: COUNTRIES, type: CHECK, search_condition:"COUNTRY_ID" IS NOT NULL'
+- COUNTR_REG_FK:
+    def: 'table: COUNTRIES, type: REFERENTIAL INTEGRITY (FOREIGN KEY), rule: NO ACTION'
+- DEPT_ID_PK:
+    def: 'table: DEPARTMENTS, columns: [DEPARTMENT_ID], type: PRIMARY KEY'
+- DEPT_LOC_FK:
+    def: 'table: DEPARTMENTS, type: REFERENTIAL INTEGRITY (FOREIGN KEY), rule: NO
+      ACTION'
+- DEPT_MGR_FK:
+    def: 'table: DEPARTMENTS, type: REFERENTIAL INTEGRITY (FOREIGN KEY), rule: NO
+      ACTION'
+- DEPT_NAME_NN:
+    def: 'table: DEPARTMENTS, type: CHECK, search_condition:"DEPARTMENT_NAME" IS NOT
+      NULL'
+- EMP_DEPT_FK:
+    def: 'table: EMPLOYEES, type: REFERENTIAL INTEGRITY (FOREIGN KEY), rule: NO ACTION'
+- EMP_EMAIL_NN:
+    def: 'table: EMPLOYEES, type: CHECK, search_condition:"EMAIL" IS NOT NULL'
+- EMP_EMAIL_UK:
+    def: 'table: EMPLOYEES, columns: [EMAIL], type: UNIQUE'
+- EMP_EMP_ID_PK:
+    def: 'table: EMPLOYEES, columns: [EMPLOYEE_ID], type: PRIMARY KEY'
+- EMP_HIRE_DATE_NN:
+    def: 'table: EMPLOYEES, type: CHECK, search_condition:"HIRE_DATE" IS NOT NULL'
+- EMP_JOB_FK:
+    def: 'table: EMPLOYEES, type: REFERENTIAL INTEGRITY (FOREIGN KEY), rule: NO ACTION'
+- EMP_JOB_NN:
+    def: 'table: EMPLOYEES, type: CHECK, search_condition:"JOB_ID" IS NOT NULL'
+- EMP_LAST_NAME_NN:
+    def: 'table: EMPLOYEES, type: CHECK, search_condition:"LAST_NAME" IS NOT NULL'
+- EMP_MANAGER_FK:
+    def: 'table: EMPLOYEES, type: REFERENTIAL INTEGRITY (FOREIGN KEY), rule: NO ACTION'
+- EMP_SALARY_MIN:
+    def: 'table: EMPLOYEES, type: CHECK, search_condition:salary > 0'
+- JOB_ID_PK:
+    def: 'table: JOBS, columns: [JOB_ID], type: PRIMARY KEY'
+- JOB_TITLE_NN:
+    def: 'table: JOBS, type: CHECK, search_condition:"JOB_TITLE" IS NOT NULL'
+- JHIST_DATE_INTERVAL:
+    def: 'table: JOB_HISTORY, type: CHECK, search_condition:end_date > start_date'
+- JHIST_DEPT_FK:
+    def: 'table: JOB_HISTORY, type: REFERENTIAL INTEGRITY (FOREIGN KEY), rule: NO
+      ACTION'
+- JHIST_EMPLOYEE_NN:
+    def: 'table: JOB_HISTORY, type: CHECK, search_condition:"EMPLOYEE_ID" IS NOT NULL'
+- JHIST_EMP_FK:
+    def: 'table: JOB_HISTORY, type: REFERENTIAL INTEGRITY (FOREIGN KEY), rule: NO
+      ACTION'
+- JHIST_EMP_ID_ST_DATE_PK:
+    def: 'table: JOB_HISTORY, columns: [EMPLOYEE_ID, START_DATE], type: PRIMARY KEY'
+- JHIST_END_DATE_NN:
+    def: 'table: JOB_HISTORY, type: CHECK, search_condition:"END_DATE" IS NOT NULL'
+- JHIST_JOB_FK:
+    def: 'table: JOB_HISTORY, type: REFERENTIAL INTEGRITY (FOREIGN KEY), rule: NO
+      ACTION'
+- JHIST_JOB_NN:
+    def: 'table: JOB_HISTORY, type: CHECK, search_condition:"JOB_ID" IS NOT NULL'
+- JHIST_START_DATE_NN:
+    def: 'table: JOB_HISTORY, type: CHECK, search_condition:"START_DATE" IS NOT NULL'
+- LOC_CITY_NN:
+    def: 'table: LOCATIONS, type: CHECK, search_condition:"CITY" IS NOT NULL'
+- LOC_C_ID_FK:
+    def: 'table: LOCATIONS, type: REFERENTIAL INTEGRITY (FOREIGN KEY), rule: NO ACTION'
+- LOC_ID_PK:
+    def: 'table: LOCATIONS, columns: [LOCATION_ID], type: PRIMARY KEY'
+- REGION_ID_NN:
+    def: 'table: REGIONS, type: CHECK, search_condition:"REGION_ID" IS NOT NULL'
+- REG_ID_PK:
+    def: 'table: REGIONS, columns: [REGION_ID], type: PRIMARY KEY'
+sequences:
+- DEPARTMENTS_SEQ:
+    def: 'owner: TESTADMIN'
+- EMPLOYEES_SEQ:
+    def: 'owner: TESTADMIN'
+- LOCATIONS_SEQ:
+    def: 'owner: TESTADMIN'
+procedures:
+- ADD_JOB_HISTORY:
+    hash: af6b7896b50a77ea6eafd4ff511c8d87
+    def: P_DEPARTMENT_ID NUMBER IN, P_EMP_ID NUMBER IN, P_END_DATE DATE IN, P_JOB_ID
+      VARCHAR2 IN, P_START_DATE DATE IN
+- SECURE_DML:
+    hash: 15da3a3e2411ee66f58b9eb20c594b18
+    def: null
+directories:
+- SDO_DIR_ADMIN:
+    def: 'owner: SYS, path: /opt/oracle/product/21c/dbhomeXE/md/admin'
+- XMLDIR:
+    def: 'owner: SYS, path: /opt/oracle/product/21c/dbhomeXE/rdbms/xml'
+- XSDDIR:
+    def: 'owner: SYS, path: /opt/oracle/product/21c/dbhomeXE/rdbms/xml/schema'
+- ORACLE_OCM_CONFIG_DIR2:
+    def: 'owner: SYS, path: /opt/oracle/homes/OraDBHome21cXE/ccr/state'
+- ORACLE_OCM_CONFIG_DIR:
+    def: 'owner: SYS, path: /opt/oracle/homes/OraDBHome21cXE/ccr/state'
+- ORACLE_BASE:
+    def: 'owner: SYS, path: /opt/oracle'
+- ORACLE_HOME:
+    def: 'owner: SYS, path: /opt/oracle/product/21c/dbhomeXE'
+- OPATCH_INST_DIR:
+    def: 'owner: SYS, path: /opt/oracle/product/21c/dbhomeXE/OPatch'
+- DATA_PUMP_DIR:
+    def: 'owner: SYS, path: /opt/oracle/admin/XE/dpdump/41858CEF8D6B04EFE063020013AC7F54'
+- DBMS_OPTIM_LOGDIR:
+    def: 'owner: SYS, path: /opt/oracle/product/21c/dbhomeXE/cfgtoollogs'
+- DBMS_OPTIM_ADMINDIR:
+    def: 'owner: SYS, path: /opt/oracle/product/21c/dbhomeXE/rdbms/admin'
+- OPATCH_SCRIPT_DIR:
+    def: 'owner: SYS, path: /opt/oracle/product/21c/dbhomeXE/QOpatch'
+- OPATCH_LOG_DIR:
+    def: 'owner: SYS, path: /opt/oracle/homes/OraDBHome21cXE/rdbms/log'
+- JAVA$JOX$CUJS$DIRECTORY$:
+    def: 'owner: SYS, path: /opt/oracle/product/21c/dbhomeXE/javavm/admin/'

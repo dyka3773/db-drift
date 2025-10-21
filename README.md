@@ -54,7 +54,7 @@ uv add db-drift
 Basic usage:
 
 ```bash
-db-drift --source "sqlite:///source.db" --target "sqlite:///target.db"
+db-drift --source "source.db" --target "target.db"
 ```
 
 The tool will generate an HTML report showing the differences between the two database states.
@@ -63,10 +63,10 @@ The tool will generate an HTML report showing the differences between the two da
 
 ```bash
 # Compare two SQLite databases
-db-drift --source "sqlite:///old_version.db" --target "sqlite:///new_version.db"
+db-drift --source "old_version.db" --target "new_version.db"
 
 # Specify custom output file
-db-drift --source "sqlite:///db1.db" --target "sqlite:///db2.db" --output "my_report.html"
+db-drift --source "db1.db" --target "db2.db" --output "my_report.html"
 
 # Show version information
 db-drift --version
@@ -87,8 +87,9 @@ db-drift --version
 
 Currently supported database management systems:
 - `sqlite` - SQLite databases
+- `oracle` - Oracle databases
 
-*Note: Support for PostgreSQL, MySQL, and Oracle is planned for future releases.*
+*Note: Support for PostgreSQL and MySQL is planned for future releases.*
 
 ## Troubleshooting
 
