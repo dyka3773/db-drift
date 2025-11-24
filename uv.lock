@@ -321,7 +321,7 @@ wheels = [
 
 [[package]]
 name = "db-drift"
-version = "1.3.0"
+version = "1.3.1"
 source = { editable = "." }
 dependencies = [
     { name = "oracledb" },
@@ -357,8 +357,8 @@ requires-dist = [
 [package.metadata.requires-dev]
 dev = [
     { name = "build", specifier = ">=1.3.0" },
-    { name = "git-changelog", specifier = "==2.6.3" },
-    { name = "pytest", specifier = ">=8.4.2" },
+    { name = "git-changelog", specifier = "==2.7.0" },
+    { name = "pytest", specifier = ">=9.0.0" },
     { name = "python-semantic-release", specifier = "==10.5.0" },
     { name = "tox", specifier = "==4.32.0" },
     { name = "twine", specifier = ">=6.1.0" },
@@ -426,7 +426,7 @@ wheels = [
 
 [[package]]
 name = "git-changelog"
-version = "2.6.3"
+version = "2.7.0"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
     { name = "jinja2" },
@@ -436,9 +436,9 @@ dependencies = [
     { name = "tomli", marker = "python_full_version < '3.11'" },
     { name = "typing-extensions", marker = "python_full_version < '3.13'" },
 ]
-sdist = { url = "https://files.pythonhosted.org/packages/6e/88/e38f434e41c520ea14feb58bee94dd14f785de5f72ab3d3a21a7fcc192ff/git_changelog-2.6.3.tar.gz", hash = "sha256:d9a5cd7bd8c7dd3eb903c9de93ea5c24b0099ba6e56937f1d9406f7d09034d96", size = 81476, upload-time = "2025-09-18T12:35:36.618Z" }
+sdist = { url = "https://files.pythonhosted.org/packages/cc/66/918cce4e4946645d212bbe9a50d490761f62c5745118fdb132c35143d4ed/git_changelog-2.7.0.tar.gz", hash = "sha256:bab8ecfe63e3ade284e1281e331240c09c37278a8f9ff54bf7f83d543ad9142f", size = 83835, upload-time = "2025-11-21T11:48:34.99Z" }
 wheels = [
-    { url = "https://files.pythonhosted.org/packages/a5/35/44a2f7f7cfb321d7efcf49a366d3e58b44c960cc3d0279dfa6ef7b787b54/git_changelog-2.6.3-py3-none-any.whl", hash = "sha256:733d0416e5635902ad30d050b3089cb00e49034399e00fba003a63b1c975bfa3", size = 37283, upload-time = "2025-09-18T12:35:35.192Z" },
+    { url = "https://files.pythonhosted.org/packages/56/d1/a9baeae74278da6fcbb578147c45b602b719c6fa98bb8b6bca66c1601638/git_changelog-2.7.0-py3-none-any.whl", hash = "sha256:739b760149977729a293203aed0a85c35592637eec63b3bc739d3897c15984d7", size = 37600, upload-time = "2025-11-21T11:48:33.733Z" },
 ]
 
 [[package]]
