@@ -5,26 +5,38 @@ updates:
     directory: "/"
     schedule:
       interval: "weekly"
-    open-pull-requests-limit: 10
+    open-pull-requests-limit: 5
     commit-message:
       prefix: "deps"
-      prefix-development: "deps-dev"
     labels:
       - "dependencies"
       - "python"
+    assignees:
+      - "dyka3773"
+    target-branch: "develop"
+    groups:
+      pip-dependencies:
+        patterns:
+          - "*"
 
   - package-ecosystem: "uv"
     directory: "/"
     schedule:
       interval: "weekly"
-    open-pull-requests-limit: 10
+    open-pull-requests-limit: 5
     commit-message:
       prefix: "deps"
-      prefix-development: "deps-dev"
     labels:
       - "dependencies"
       - "uv"
       - "python"
+    assignees:
+      - "dyka3773"
+    target-branch: "develop"
+    groups:
+      uv-dependencies:
+        patterns:
+          - "*"
   
   # Enable version updates for GitHub Actions
   - package-ecosystem: "github-actions"
@@ -37,3 +49,10 @@ updates:
     labels:
       - "dependencies"
       - "github-actions"
+    assignees:
+      - "dyka3773"
+    target-branch: "develop"
+    groups:
+      github-actions:
+        patterns:
+          - "*"
