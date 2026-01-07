@@ -6,6 +6,10 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
 <!-- insertion marker -->
+## [v1.3.4](https://github.com/dyka3773/db-drift/releases/tag/v1.3.4) - 2026-01-07
+
+<small>[Compare with v1.3.3](https://github.com/dyka3773/db-drift/compare/v1.3.3...v1.3.4)</small>
+
 ## [v1.3.3](https://github.com/dyka3773/db-drift/releases/tag/v1.3.3) - 2025-12-15
 
 <small>[Compare with v1.3.2](https://github.com/dyka3773/db-drift/compare/v1.3.2...v1.3.3)</small>
@@ -80,3 +84,4 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 ## [v1.0.0](https://github.com/dyka3773/db-drift/releases/tag/v1.0.0) - 2025-08-04
 
 <small>[Compare with first commit](https://github.com/dyka3773/db-drift/compare/4741274c923649ec7b499260bc11141a04b5d000...v1.0.0)</small>
+
