@@ -51,7 +51,7 @@ dev = [
     "git-changelog==2.7.0",
     "pytest>=9.0.2",
     "python-semantic-release==10.5.3",
-    "tox==4.33.0",
+    "tox==4.34.1",
     "twine>=6.1.0",
 ]
 
