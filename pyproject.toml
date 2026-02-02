@@ -29,12 +29,12 @@ classifiers = [
     "Typing :: Typed",
 ]
 dependencies = [
-    "oracledb==3.4.1",
+    "oracledb==3.4.2",
     "psycopg[binary]==3.3.2",
     "pymysql==1.1.2",
     "python-dotenv==1.2.1",
     "pyyaml==6.0.3",
-    "sqlmodel==0.0.31",
+    "sqlmodel==0.0.32",
     "sshtunnel==0.4.0",
 ]
 
@@ -48,7 +48,7 @@ db-drift = "db_drift:main"
 [dependency-groups]
 dev = [
     "build==1.4.0",
-    "git-changelog==2.7.0",
+    "git-changelog==2.7.1",
     "pytest==9.0.2",
     "python-semantic-release==10.5.3",
     "tox==4.34.1",
