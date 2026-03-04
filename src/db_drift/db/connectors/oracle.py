@@ -1,7 +1,11 @@
+from typing import TYPE_CHECKING
+
 import oracledb
 
 from db_drift.db.connectors.base_connector import BaseDBConnector
+from db_drift.db.mappers.constraint_types.oracle import ORACLE_CONSTRAINT_MAPPER
 from db_drift.db.strategies.oracle import (
+    fetch_oracle_constraints,
     fetch_oracle_editions,
     fetch_oracle_indexes,
     fetch_oracle_indextypes,
@@ -12,6 +16,9 @@ from db_drift.db.strategies.oracle import (
     fetch_oracle_triggers,
     fetch_oracle_views,
 )
+
+if TYPE_CHECKING:
+    from db_drift.db.mappers.constraint_types.base import DictConstraintTypeMapper
 
 
 class OracleConnector(BaseDBConnector):
@@ -34,7 +41,7 @@ class OracleConnector(BaseDBConnector):
             "operators": fetch_oracle_operators,
             "triggers": fetch_oracle_triggers,
             "indexes": fetch_oracle_indexes,
-            # "constraints": fetch_oracle_constraints,  # noqa: ERA001
+            "constraints": lambda cursor: fetch_oracle_constraints(cursor, self.constraint_type_mapper),
             # "sequences": fetch_oracle_sequences,  # noqa: ERA001
             # "synonyms": fetch_oracle_synonyms,  # noqa: ERA001
             # "functions": fetch_oracle_functions,  # noqa: ERA001
@@ -46,3 +53,4 @@ class OracleConnector(BaseDBConnector):
         }
 
         self.connection_library = oracledb
+        self.constraint_type_mapper: DictConstraintTypeMapper = ORACLE_CONSTRAINT_MAPPER

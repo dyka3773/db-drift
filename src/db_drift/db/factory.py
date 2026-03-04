@@ -1,7 +1,7 @@
 from collections.abc import Callable
 
 from db_drift.db.connectors.base_connector import BaseDBConnector
-from db_drift.utils.constants import SUPPORTED_DBMS_REGISTRY
+from db_drift.utils.constants import get_supported_dbms_registry
 
 
 def get_connector(dbms: str) -> Callable[[str], BaseDBConnector]:
@@ -18,9 +18,11 @@ def get_connector(dbms: str) -> Callable[[str], BaseDBConnector]:
     Raises:
         ValueError: If the specified DBMS is not supported.
     """
-    if dbms not in SUPPORTED_DBMS_REGISTRY:
+    supported_dbms_registry = get_supported_dbms_registry()
+
+    if dbms not in supported_dbms_registry:
         # This should not happen due to argparse choices, but we double-check here.
         msg = f"Unsupported DBMS type: {dbms}"
         raise ValueError(msg)
 
-    return SUPPORTED_DBMS_REGISTRY[dbms]
+    return supported_dbms_registry[dbms]

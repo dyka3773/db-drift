@@ -12,7 +12,14 @@ class DatabaseObjectWithColumns(DatabaseObject):
 
 
 @dataclass
-class DatabaseObjectIndexLike(DatabaseObjectWithColumns):
+class DatabaseObjectWithColumnsNoDetails(DatabaseObject):
+    """Database object that contains columns (indexes, constraints, etc.) without column details."""
+
+    columns: set[str]
+
+
+@dataclass
+class DatabaseObjectIndexLike(DatabaseObjectWithColumnsNoDetails):
     """Base class for index-like objects (indexes, constraints)."""
 
     table_name: str

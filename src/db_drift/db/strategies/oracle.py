@@ -1,7 +1,9 @@
 from oracledb import cursor
 from sqlalchemy import Row
 
+from db_drift.db.mappers.constraint_types.base import ConstraintTypeMapper
 from db_drift.models.column import Column
+from db_drift.models.constraint import Constraint
 from db_drift.models.edition import Edition
 from db_drift.models.index import Index
 from db_drift.models.indextype import IndexType
@@ -187,7 +189,11 @@ def fetch_oracle_materialized_views(cursor: cursor.Cursor) -> dict[str, Material
     }
 
     select_mv_columns = """
-        SELECT table_name, column_name, comments, owner
+        SELECT
+            table_name,
+            column_name,
+            comments,
+            owner
         FROM all_col_comments
         WHERE table_name IN (
             SELECT mview_name
@@ -379,7 +385,8 @@ def fetch_oracle_triggers(cursor: cursor.Cursor) -> dict[str, Trigger]:
             trigger_type,
             table_name,
             column_name,
-            trigger_body
+            trigger_body,
+            owner
         FROM all_triggers
         WHERE trigger_name NOT LIKE '%$%'
             AND owner NOT IN (
@@ -398,7 +405,7 @@ def fetch_oracle_triggers(cursor: cursor.Cursor) -> dict[str, Trigger]:
     cursor.execute(select_triggers)
     trigger_rows = cursor.fetchall()
     triggers: dict[str, Trigger] = {
-        row[0]: Trigger(
+        f"{row[5]}.{row[0]}": Trigger(
             body=hash_body(row[4]),
             definition=f"{row[1]} ({row[2]}{'.' + row[3] if row[3] else ''})",
         )
@@ -424,9 +431,10 @@ def fetch_oracle_indexes(cursor: cursor.Cursor) -> dict[str, Index]:
             ai.table_name,
             ai.uniqueness,
             ai.tablespace_name,
-            aic.column_name
+            aic.column_name,
+            ai.owner
         FROM all_indexes ai
-        JOIN all_ind_columns aic ON ai.index_name = aic.index_name AND ai.table_name = aic.table_name
+            JOIN all_ind_columns aic ON ai.index_name = aic.index_name AND ai.table_name = aic.table_name
         WHERE ai.index_name NOT LIKE '%$%'
             AND ai.owner NOT IN (
                 SELECT DISTINCT username
@@ -442,7 +450,8 @@ def fetch_oracle_indexes(cursor: cursor.Cursor) -> dict[str, Index]:
     indexes: dict[str, Index] = {}
 
     for row in index_rows:
-        index_name = row[0]
+        # ensure uniqueness across schemas
+        index_name = row[5] + "." + row[0]  # owner.index_name
 
         # The above query returns multiple rows per index (one per column),
         # so we need to aggregate them into a single Index object.
@@ -451,13 +460,68 @@ def fetch_oracle_indexes(cursor: cursor.Cursor) -> dict[str, Index]:
                 table_name=row[1],
                 uniqueness=row[2],
                 tablespace=row[3],
-                columns={},
+                columns=set(),
             )
 
-        indexes[index_name].columns[row[4]] = Column(
-            doc="",
-            data_type="",
-            is_nullable=None,
-        )
+        indexes[index_name].columns.add(row[4])
 
     return indexes
+
+
+def fetch_oracle_constraints(cursor: cursor.Cursor, constraint_type_mapper: ConstraintTypeMapper) -> dict[str, Constraint]:
+    """
+    Fetch the list of constraints from the Oracle database available to the connected user.
+
+    Args:
+        cursor (cursor.Cursor): The Oracle database cursor.
+        constraint_type_mapper (ConstraintTypeMapper): The mapper to convert native constraint types to DBConstraintType.
+
+    Returns:
+        dict[str, Constraint]: A dictionary of Constraint objects representing the constraints in the database.
+    """
+    select_constraints = """
+        SELECT
+            C.constraint_name,
+            C.constraint_type,
+            C.table_name,
+            C.delete_rule,
+            C.search_condition,
+            IC.column_name,
+            C.owner
+        FROM all_constraints C
+            LEFT JOIN all_ind_columns IC
+                ON (C.index_name = IC.index_name
+                    AND C.index_owner = IC.index_owner
+                    AND C.table_name = IC.table_name)
+        WHERE C.constraint_name NOT LIKE '%$%'
+            AND C.owner NOT IN (
+                SELECT DISTINCT username
+                FROM all_users
+                WHERE ORACLE_MAINTAINED = 'Y'
+            )
+            AND C.table_name NOT LIKE '%$%'
+            AND C.constraint_name NOT LIKE '%SYS_%'
+        ORDER BY C.owner, C.table_name, C.constraint_name, IC.column_position
+    """
+    cursor.execute(select_constraints)
+    constraint_rows = cursor.fetchall()
+    constraints: dict[str, Constraint] = {}
+
+    for row in constraint_rows:
+        # ensure uniqueness across schemas
+        constraint_name = row[6] + "." + row[0]  # owner.constraint_name
+
+        # The above query returns multiple rows per constraint (one per column),
+        # so we need to aggregate them into a single Constraint object.
+        if constraint_name not in constraints:
+            constraints[constraint_name] = Constraint(
+                table_name=row[2],
+                constraint_type=constraint_type_mapper.map(row[1]),
+                rule=row[3] if row[3] else None,
+                condition=row[4] if row[4] else None,
+                columns=set(),
+            )
+
+        if row[5]:  # column_name can be None for some constraint types
+            constraints[constraint_name].columns.add(row[5])
+    return constraints
