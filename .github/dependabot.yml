@@ -1,24 +1,6 @@
 version: 2
 updates:
   # Enable version updates for Python dependencies
-  - package-ecosystem: "pip"
-    directory: "/"
-    schedule:
-      interval: "weekly"
-    open-pull-requests-limit: 5
-    commit-message:
-      prefix: "deps"
-    labels:
-      - "dependencies"
-      - "python"
-    assignees:
-      - "dyka3773"
-    target-branch: "develop"
-    groups:
-      pip-dependencies:
-        patterns:
-          - "*"
-
   - package-ecosystem: "uv"
     directory: "/"
     schedule:
