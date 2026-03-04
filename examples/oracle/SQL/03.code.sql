@@ -68,3 +68,18 @@ END;
 /
 
 COMMIT;
+
+CREATE OR REPLACE FUNCTION get_employee_name (p_employee_id IN employees.employee_id%type)
+  RETURN VARCHAR2
+IS
+  v_employee_name VARCHAR2(100);
+BEGIN
+  SELECT first_name || ' ' || last_name
+    INTO v_employee_name
+    FROM employees
+    WHERE employee_id = p_employee_id;
+  RETURN v_employee_name;
+END get_employee_name;
+/
+
+COMMIT;

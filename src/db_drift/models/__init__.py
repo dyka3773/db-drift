@@ -1,4 +1,4 @@
-from db_drift.models.abstract_models import DatabaseObject, DatabaseObjectWithDoc
+from db_drift.models.abstract_models import DatabaseObject, DatabaseObjectWithDefinition, DatabaseObjectWithDoc, DatabaseObjectWithHashedBody
 from db_drift.models.column import Column
 from db_drift.models.complex_abstract_models import DatabaseObjectIndexLike, DatabaseObjectWithColumns
 from db_drift.models.constraint import Constraint
@@ -25,7 +25,9 @@ __all__ = [
     "DatabaseObject",
     "DatabaseObjectIndexLike",
     "DatabaseObjectWithColumns",
+    "DatabaseObjectWithDefinition",
     "DatabaseObjectWithDoc",
+    "DatabaseObjectWithHashedBody",
     "Directory",
     "Edition",
     "Function",

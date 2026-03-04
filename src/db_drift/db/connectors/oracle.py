@@ -7,6 +7,7 @@ from db_drift.db.mappers.constraint_types.oracle import ORACLE_CONSTRAINT_MAPPER
 from db_drift.db.strategies.oracle import (
     fetch_oracle_constraints,
     fetch_oracle_editions,
+    fetch_oracle_functions,
     fetch_oracle_indexes,
     fetch_oracle_indextypes,
     fetch_oracle_materialized_views,
@@ -46,7 +47,7 @@ class OracleConnector(BaseDBConnector):
             "constraints": lambda cursor: fetch_oracle_constraints(cursor, self.constraint_type_mapper),
             "sequences": fetch_oracle_sequences,
             "synonyms": fetch_oracle_synonyms,
-            # "functions": fetch_oracle_functions,  # noqa: ERA001
+            "functions": fetch_oracle_functions,
             # "procedures": fetch_oracle_procedures,  # noqa: ERA001
             # "packages": fetch_oracle_packages,  # noqa: ERA001
             # "types": fetch_oracle_types,  # noqa: ERA001

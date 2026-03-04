@@ -5,7 +5,9 @@ from db_drift.db.mappers.constraint_types.base import ConstraintTypeMapper
 from db_drift.models import (
     Column,
     Constraint,
+    DatabaseObjectWithHashedBody,
     Edition,
+    Function,
     Index,
     IndexType,
     MaterializedView,
@@ -28,7 +30,7 @@ def fetch_oracle_tables(cursor: cursor.Cursor) -> dict[str, Table]:
         cursor (cursor.Cursor): The Oracle database cursor.
 
     Returns:
-        list[Table]: A list of Table objects representing the tables in the database.
+        dict[str, Table]: A dictionary of Table objects representing the tables in the database, keyed by "owner.table_name".
     """
     table_rows = _get_table_like_obj_list("TABLE", cursor)
     tables: dict[str, Table] = {
@@ -61,7 +63,7 @@ def fetch_oracle_views(cursor: cursor.Cursor) -> dict[str, View]:
         cursor (cursor.Cursor): The Oracle database cursor.
 
     Returns:
-        list[View]: A list of View objects representing the views in the database.
+        dict[str, View]: A dictionary of View objects representing the views in the database, keyed by "owner.view_name".
     """
     view_rows = _get_table_like_obj_list("VIEW", cursor)
     views: dict[str, View] = {
@@ -95,7 +97,7 @@ def _get_table_like_obj_list(obj: str, cursor: cursor.Cursor) -> list[Row]:
         cursor (cursor.Cursor): The Oracle database cursor.
 
     Returns:
-        list: A list of Table or View objects.
+        list[Row]: A list of rows representing the table or view objects.
     """
     select_obj = f"""
         SELECT
@@ -125,7 +127,7 @@ def _get_column_list(object_type: str, cursor: cursor.Cursor) -> list[Row]:
         cursor (cursor.Cursor): The Oracle database cursor.
 
     Returns:
-        list: A list of columns for the specified object type.
+        list[Row]: A list of rows representing the columns for the specified object type.
     """
     select_columns = f"""
         SELECT
@@ -604,3 +606,91 @@ def fetch_oracle_synonyms(cursor: cursor.Cursor) -> dict[str, Synonym]:
         f"{row[3]}.{row[0]}": Synonym(definition=f"from: {row[1]}.{row[2]}, to: {row[3]}.{row[0]}") for row in synonym_rows
     }
     return synonyms
+
+
+def fetch_oracle_functions(cursor: cursor.Cursor) -> dict[str, Function]:
+    """
+    Fetch the list of functions from the Oracle database available to the connected user.
+
+    Args:
+        cursor (cursor.Cursor): The Oracle database cursor.
+
+    Returns:
+        dict[str, Function]: A dictionary of Function objects representing the functions in the database.
+    """
+    # Fetch all functions and their DDL definitions using the helper function
+    functions: dict[str, Function] = _get_db_object_and_ddl(cursor, "FUNCTION")
+
+    # For each function, fetch its arguments and append them to the definition
+    for func_name, func in functions.items():
+        function_arguments = _get_obj_arguments(cursor, func_name.split(".")[1])  # Extract object name without schema
+
+        for arg in function_arguments:
+            func.definition += f"{arg[0] if arg[0] else '----'} {arg[2]} {arg[3]}, "  # argument_name data_type in_out
+        func.definition = func.definition.rstrip(", ")  # Remove trailing comma and space
+
+    return functions
+
+
+def _get_db_object_and_ddl(cursor: cursor.Cursor, object_type: str) -> dict[str, DatabaseObjectWithHashedBody]:
+    """
+    Fetch database objects (functions, procedures, packages, etc.) and their DDL definitions from the Oracle database.
+    Helper function to fetch database objects and their DDL definitions.
+
+    Args:
+        cursor (cursor.Cursor): The Oracle database cursor.
+        object_type (str): The type of database object to fetch (e.g., 'FUNCTION', 'PROCEDURE').
+
+    Returns:
+        dict[str, DatabaseObjectWithHashedBody]: A dictionary mapping object names to DatabaseObjectWithHashedBody instances.
+    """
+    select_objects = f"""
+        SELECT
+            owner,
+            object_name,
+            dbms_metadata.get_ddl('{object_type}', object_name, owner) AS ddl
+        FROM all_objects
+        WHERE object_type = '{object_type}'
+            AND object_name NOT LIKE '%$%'
+            AND owner NOT IN (
+                SELECT DISTINCT username
+                FROM all_users
+                WHERE ORACLE_MAINTAINED = 'Y'
+            )
+        ORDER BY owner, object_name
+    """
+    cursor.execute(select_objects)
+    object_rows = cursor.fetchall()
+    objects: dict[str, DatabaseObjectWithHashedBody] = {
+        f"{row[0]}.{row[1]}": DatabaseObjectWithHashedBody(
+            definition="",
+            body=hash_body(row[2].read()) if row[2] else None,
+        )
+        for row in object_rows
+    }
+    return objects
+
+
+def _get_obj_arguments(cursor: cursor.Cursor, object_name: str) -> list[Row]:
+    """
+    Fetch the arguments of a database object (function, procedure) from the Oracle database.
+
+    Args:
+        cursor (cursor.Cursor): The Oracle database cursor.
+        object_name (str): The name of the database object to fetch arguments for.
+
+    Returns:
+        list[Row]: A list of rows representing the arguments of the specified database object.
+    """
+    select_arguments = f"""
+        SELECT
+            argument_name,
+            position,
+            data_type,
+            in_out
+        FROM all_arguments
+        WHERE object_name = '{object_name}'
+        ORDER BY position
+    """
+    cursor.execute(select_arguments)
+    return cursor.fetchall()
