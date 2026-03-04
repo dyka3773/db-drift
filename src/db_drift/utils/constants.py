@@ -1,8 +1,9 @@
 from enum import Enum, unique
+from importlib import import_module
+from typing import TYPE_CHECKING
 
-from db_drift.db.connectors.base_connector import BaseDBConnector
-from db_drift.db.connectors.oracle import OracleConnector
-from db_drift.db.connectors.sqlite import SQLiteConnector
+if TYPE_CHECKING:
+    from db_drift.db.connectors.base_connector import BaseDBConnector
 
 
 @unique
@@ -19,14 +20,26 @@ class ExitCode(Enum):
     SIGINT = 130
 
 
-# An easy-to-update registry pattern for supported DBMS connectors
-SUPPORTED_DBMS_REGISTRY: dict[str, BaseDBConnector] = {
-    "sqlite": SQLiteConnector,
-    "oracle": OracleConnector,
-    # As we add more connectors, uncomment the lines below
-    # "postgresql": PostgresConnector,  # noqa: ERA001
-    # "mysql": MySQLConnector,  # noqa: ERA001
-}
+def get_supported_dbms_registry() -> dict[str, type["BaseDBConnector"]]:
+    """
+    Return supported DBMS connector classes.
+
+    Imports are kept inside this function to avoid circular imports at module load time.
+    """
+    sqlite_module = import_module("db_drift.db.connectors.sqlite")
+    oracle_module = import_module("db_drift.db.connectors.oracle")
+
+    sqlite_connector = sqlite_module.SQLiteConnector
+    oracle_connector = oracle_module.OracleConnector
+
+    # An easy-to-update registry pattern for supported DBMS connectors
+    return {
+        "sqlite": sqlite_connector,
+        "oracle": oracle_connector,
+        # As we add more connectors, uncomment the lines below
+        # "postgresql": PostgresConnector,  # noqa: ERA001
+        # "mysql": MySQLConnector,  # noqa: ERA001
+    }
 
 
 @unique
@@ -37,3 +50,5 @@ class DBConstraintType(Enum):
     CHECK = "CHECK"
     NOT_NULL = "NOT NULL"
     EXCLUSION = "EXCLUSION"  # PostgreSQL specific
+    READ_ONLY = "READ ONLY"  # For Oracle views
+    CHECK_OPTION = "CHECK OPTION"  # For Oracle views

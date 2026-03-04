@@ -1,9 +1,29 @@
 from oracledb import cursor
 from sqlalchemy import Row
 
-from db_drift.models.column import Column
-from db_drift.models.table import Table
-from db_drift.models.view import View
+from db_drift.db.mappers.constraint_types.base import ConstraintTypeMapper
+from db_drift.models import (
+    Column,
+    Constraint,
+    DatabaseObjectWithHashedBody,
+    Directory,
+    Edition,
+    Function,
+    Index,
+    IndexType,
+    MaterializedView,
+    MiningModel,
+    Operator,
+    Package,
+    Sequence,
+    StoredProcedure,
+    Synonym,
+    Table,
+    Trigger,
+    Type,
+    View,
+)
+from db_drift.utils.string import hash_body
 
 
 def fetch_oracle_tables(cursor: cursor.Cursor) -> dict[str, Table]:
@@ -14,7 +34,7 @@ def fetch_oracle_tables(cursor: cursor.Cursor) -> dict[str, Table]:
         cursor (cursor.Cursor): The Oracle database cursor.
 
     Returns:
-        list[Table]: A list of Table objects representing the tables in the database.
+        dict[str, Table]: A dictionary of Table objects representing the tables in the database, keyed by "owner.table_name".
     """
     table_rows = _get_table_like_obj_list("TABLE", cursor)
     tables: dict[str, Table] = {
@@ -47,7 +67,7 @@ def fetch_oracle_views(cursor: cursor.Cursor) -> dict[str, View]:
         cursor (cursor.Cursor): The Oracle database cursor.
 
     Returns:
-        list[View]: A list of View objects representing the views in the database.
+        dict[str, View]: A dictionary of View objects representing the views in the database, keyed by "owner.view_name".
     """
     view_rows = _get_table_like_obj_list("VIEW", cursor)
     views: dict[str, View] = {
@@ -81,9 +101,9 @@ def _get_table_like_obj_list(obj: str, cursor: cursor.Cursor) -> list[Row]:
         cursor (cursor.Cursor): The Oracle database cursor.
 
     Returns:
-        list: A list of Table or View objects.
+        list[Row]: A list of rows representing the table or view objects.
     """
-    select_obj_comments = f"""
+    select_obj = f"""
         SELECT
             table_name,
             comments,
@@ -98,7 +118,7 @@ def _get_table_like_obj_list(obj: str, cursor: cursor.Cursor) -> list[Row]:
             )
         ORDER BY owner, table_name
     """
-    cursor.execute(select_obj_comments)
+    cursor.execute(select_obj)
     return cursor.fetchall()
 
 
@@ -111,7 +131,7 @@ def _get_column_list(object_type: str, cursor: cursor.Cursor) -> list[Row]:
         cursor (cursor.Cursor): The Oracle database cursor.
 
     Returns:
-        list: A list of columns for the specified object type.
+        list[Row]: A list of rows representing the columns for the specified object type.
     """
     select_columns = f"""
         SELECT
@@ -142,3 +162,668 @@ def _get_column_list(object_type: str, cursor: cursor.Cursor) -> list[Row]:
     """
     cursor.execute(select_columns)
     return cursor.fetchall()
+
+
+def fetch_oracle_materialized_views(cursor: cursor.Cursor) -> dict[str, MaterializedView]:
+    """
+    Fetch the list of materialized views from the Oracle database available to the connected user.
+
+    Args:
+        cursor (cursor.Cursor): The Oracle database cursor.
+
+    Returns:
+        dict[str, MaterializedView]: A dictionary of MaterializedView objects representing the materialized views in the database.
+    """
+    select_mv = """
+        SELECT
+            mview_name,
+            comments,
+            owner
+        FROM all_mview_comments
+        WHERE mview_name NOT LIKE '%$%'
+            AND owner NOT IN (
+                SELECT DISTINCT username
+                FROM all_users
+                WHERE ORACLE_MAINTAINED = 'Y'
+            )
+        ORDER BY owner, mview_name
+    """
+    cursor.execute(select_mv)
+    mv_rows = cursor.fetchall()
+    mviews: dict[str, MaterializedView] = {
+        f"{row[2]}.{row[0]}": MaterializedView(
+            doc=row[1],
+            columns={},  # Initialize empty columns dict
+        )
+        for row in mv_rows
+    }
+
+    select_mv_columns = """
+        SELECT
+            table_name,
+            column_name,
+            comments,
+            owner
+        FROM all_col_comments
+        WHERE table_name IN (
+            SELECT mview_name
+            FROM all_mviews
+            WHERE mview_name NOT LIKE '%$%'
+                AND owner NOT IN (
+                    SELECT DISTINCT username
+                    FROM all_users
+                    WHERE ORACLE_MAINTAINED = 'Y'
+                )
+        )
+        ORDER BY owner, table_name, column_name
+    """
+
+    cursor.execute(select_mv_columns)
+    mv_column_rows = cursor.fetchall()
+
+    for col in mv_column_rows:
+        mv_name = f"{col[3]}.{col[0]}"
+        # This assumes that all columns belong to fetched materialized views and skips others
+        if mv_name in mviews:
+            mviews[mv_name].columns[col[1]] = Column(
+                doc=col[2],
+                data_type="",  # Data type info not fetched here
+                is_nullable=None,  # Nullability info not fetched here
+            )
+
+    return mviews
+
+
+def fetch_oracle_editions(cursor: cursor.Cursor) -> dict[str, Edition]:
+    """
+    Fetch all editions stored in the database available to the user.
+
+    Args:
+        cursor (cursor.Cursor): The Oracle database cursor.
+
+    Returns:
+        dict[str, Edition]: A dictionary of Edition objects representing the editions in the database.
+    """
+    select_editions = """
+        SELECT
+            aec.edition_name,
+            aec.comments,
+            ae.parent_edition_name
+        FROM all_edition_comments aec
+        JOIN all_editions ae ON aec.edition_name = ae.edition_name
+        WHERE aec.edition_name NOT LIKE '%$%'
+        ORDER BY aec.edition_name
+    """
+    cursor.execute(select_editions)
+    edition_rows = cursor.fetchall()
+    editions: dict[str, Edition] = {
+        row[0]: Edition(
+            doc=row[1],
+            definition=f"parent_edition_name: {row[2]}" if row[2] else "No parent edition",
+        )
+        for row in edition_rows
+    }
+
+    return editions
+
+
+def fetch_oracle_mining_models(cursor: cursor.Cursor) -> dict[str, MiningModel]:
+    """
+    Fetch the list of mining models from the Oracle database available to the connected user.
+
+    Args:
+        cursor (cursor.Cursor): The Oracle database cursor.
+
+    Returns:
+        dict[str, MiningModel]: A dictionary of MiningModel objects representing the mining models in the database.
+    """
+    select_models = """
+        SELECT
+            owner,
+            model_name,
+            comments,
+            algorithm,
+            model_size
+        FROM all_mining_models
+        WHERE model_name NOT LIKE '%$%'
+            AND owner NOT IN (
+                SELECT DISTINCT username
+                FROM all_users
+                WHERE ORACLE_MAINTAINED = 'Y'
+            )
+        ORDER BY owner, model_name
+    """
+    cursor.execute(select_models)
+    model_rows = cursor.fetchall()
+    mining_models: dict[str, MiningModel] = {
+        f"{row[0]}.{row[1]}": MiningModel(
+            doc=row[2],
+            definition=f"algorithm: {row[3]}, model_size: {row[4]}",
+        )
+        for row in model_rows
+    }
+    return mining_models
+
+
+def fetch_oracle_indextypes(cursor: cursor.Cursor) -> dict[str, IndexType]:
+    """
+    Fetch the list of indextypes from the Oracle database available to the connected user.
+
+    Args:
+        cursor (cursor.Cursor): The Oracle database cursor.
+
+    Returns:
+        dict[str, IndexType]: A dictionary of IndexType objects representing the indextypes in the database.
+    """
+    select_indextypes = """
+        SELECT
+            aitc.owner,
+            aitc.indextype_name,
+            aitc.comments
+        FROM all_indextype_comments aitc
+        WHERE aitc.indextype_name NOT LIKE '%$%'
+            AND aitc.owner NOT IN (
+                SELECT DISTINCT username
+                FROM all_users
+                WHERE ORACLE_MAINTAINED = 'Y'
+            )
+        ORDER BY aitc.owner, aitc.indextype_name
+    """
+
+    cursor.execute(select_indextypes)
+    indextype_rows = cursor.fetchall()
+    indextypes: dict[str, IndexType] = {
+        f"{row[0]}.{row[1]}": IndexType(
+            doc=row[2],
+        )
+        for row in indextype_rows
+    }
+
+    return indextypes
+
+
+def fetch_oracle_operators(cursor: cursor.Cursor) -> dict[str, Operator]:
+    """
+    Fetch the list of operators from the Oracle database available to the connected user.
+
+    Args:
+        cursor (cursor.Cursor): The Oracle database cursor.
+
+    Returns:
+        dict[str, Operator]: A dictionary of Operator objects representing the operators in the database.
+    """
+    select_operators = """
+        SELECT
+            owner,
+            operator_name,
+            comments
+        FROM all_operator_comments
+        WHERE operator_name NOT LIKE '%$%'
+            AND owner NOT IN (
+                SELECT DISTINCT username
+                FROM all_users
+                WHERE ORACLE_MAINTAINED = 'Y'
+            )
+        ORDER BY owner, operator_name
+    """
+
+    cursor.execute(select_operators)
+    operator_rows = cursor.fetchall()
+    operators: dict[str, Operator] = {
+        f"{row[0]}.{row[1]}": Operator(
+            doc=row[2],
+        )
+        for row in operator_rows
+    }
+
+    return operators
+
+
+def fetch_oracle_triggers(cursor: cursor.Cursor) -> dict[str, Trigger]:
+    """
+    Fetch the list of triggers from the Oracle database available to the connected user.
+
+    Args:
+        cursor (cursor.Cursor): The Oracle database cursor.
+
+    Returns:
+        dict[str, Trigger]: A dictionary of Trigger objects representing the triggers in the database.
+    """
+    select_triggers = """
+        SELECT
+            trigger_name,
+            trigger_type,
+            table_name,
+            column_name,
+            trigger_body,
+            owner
+        FROM all_triggers
+        WHERE trigger_name NOT LIKE '%$%'
+            AND owner NOT IN (
+                SELECT DISTINCT username
+                FROM all_users
+                WHERE ORACLE_MAINTAINED = 'Y'
+            )
+            AND table_name NOT LIKE '%$%'
+            AND table_owner NOT IN (
+                SELECT DISTINCT username
+                FROM all_users
+                WHERE ORACLE_MAINTAINED = 'Y'
+            )
+        ORDER BY table_name, trigger_name
+    """
+    cursor.execute(select_triggers)
+    trigger_rows = cursor.fetchall()
+    triggers: dict[str, Trigger] = {
+        f"{row[5]}.{row[0]}": Trigger(
+            body=hash_body(row[4]),
+            definition=f"{row[1]} ({row[2]}{'.' + row[3] if row[3] else ''})",
+        )
+        for row in trigger_rows
+    }
+
+    return triggers
+
+
+def fetch_oracle_indexes(cursor: cursor.Cursor) -> dict[str, Index]:
+    """
+    Fetch the list of indexes from the Oracle database available to the connected user.
+
+    Args:
+        cursor (cursor.Cursor): The Oracle database cursor.
+
+    Returns:
+        dict[str, Index]: A dictionary of Index objects representing the indexes in the database.
+    """
+    select_indexes = """
+        SELECT
+            ai.index_name,
+            ai.table_name,
+            ai.uniqueness,
+            ai.tablespace_name,
+            aic.column_name,
+            ai.owner
+        FROM all_indexes ai
+            JOIN all_ind_columns aic ON ai.index_name = aic.index_name AND ai.table_name = aic.table_name
+        WHERE ai.index_name NOT LIKE '%$%'
+            AND ai.owner NOT IN (
+                SELECT DISTINCT username
+                FROM all_users
+                WHERE ORACLE_MAINTAINED = 'Y'
+            )
+            AND ai.table_name NOT LIKE '%$%'
+            AND ai.index_name NOT LIKE '%SYS_%'
+            ORDER BY ai.table_name, ai.index_name, aic.column_position
+    """
+    cursor.execute(select_indexes)
+    index_rows = cursor.fetchall()
+    indexes: dict[str, Index] = {}
+
+    for row in index_rows:
+        # ensure uniqueness across schemas
+        index_name = row[5] + "." + row[0]  # owner.index_name
+
+        # The above query returns multiple rows per index (one per column),
+        # so we need to aggregate them into a single Index object.
+        if index_name not in indexes:
+            indexes[index_name] = Index(
+                table_name=row[1],
+                uniqueness=row[2],
+                tablespace=row[3],
+                columns=set(),
+            )
+
+        indexes[index_name].columns.add(row[4])
+
+    return indexes
+
+
+def fetch_oracle_constraints(cursor: cursor.Cursor, constraint_type_mapper: ConstraintTypeMapper) -> dict[str, Constraint]:
+    """
+    Fetch the list of constraints from the Oracle database available to the connected user.
+
+    Args:
+        cursor (cursor.Cursor): The Oracle database cursor.
+        constraint_type_mapper (ConstraintTypeMapper): The mapper to convert native constraint types to DBConstraintType.
+
+    Returns:
+        dict[str, Constraint]: A dictionary of Constraint objects representing the constraints in the database.
+    """
+    select_constraints = """
+        SELECT
+            C.constraint_name,
+            C.constraint_type,
+            C.table_name,
+            C.delete_rule,
+            C.search_condition,
+            IC.column_name,
+            C.owner
+        FROM all_constraints C
+            LEFT JOIN all_ind_columns IC
+                ON (C.index_name = IC.index_name
+                    AND C.index_owner = IC.index_owner
+                    AND C.table_name = IC.table_name)
+        WHERE C.constraint_name NOT LIKE '%$%'
+            AND C.owner NOT IN (
+                SELECT DISTINCT username
+                FROM all_users
+                WHERE ORACLE_MAINTAINED = 'Y'
+            )
+            AND C.table_name NOT LIKE '%$%'
+            AND C.constraint_name NOT LIKE '%SYS_%'
+        ORDER BY C.owner, C.table_name, C.constraint_name, IC.column_position
+    """
+    cursor.execute(select_constraints)
+    constraint_rows = cursor.fetchall()
+    constraints: dict[str, Constraint] = {}
+
+    for row in constraint_rows:
+        # ensure uniqueness across schemas
+        constraint_name = row[6] + "." + row[0]  # owner.constraint_name
+
+        # The above query returns multiple rows per constraint (one per column),
+        # so we need to aggregate them into a single Constraint object.
+        if constraint_name not in constraints:
+            constraints[constraint_name] = Constraint(
+                table_name=row[2],
+                constraint_type=constraint_type_mapper.map(row[1]),
+                rule=row[3] if row[3] else None,
+                condition=row[4] if row[4] else None,
+                columns=set(),
+            )
+
+        if row[5]:  # column_name can be None for some constraint types
+            constraints[constraint_name].columns.add(row[5])
+    return constraints
+
+
+def fetch_oracle_sequences(cursor: cursor.Cursor) -> dict[str, Sequence]:
+    """
+    Fetch the list of sequences from the Oracle database available to the connected user.
+
+    Args:
+        cursor (cursor.Cursor): The Oracle database cursor.
+
+    Returns:
+        dict[str, Sequence]: A dictionary of Sequence objects representing the sequences in the database.
+    """
+    select_sequences = """
+        SELECT
+            sequence_name,
+            min_value,
+            max_value,
+            increment_by,
+            sequence_owner,
+            last_number
+        FROM all_sequences
+        WHERE sequence_name NOT LIKE '%$%'
+            AND sequence_owner NOT IN (
+                SELECT DISTINCT username
+                FROM all_users
+                WHERE ORACLE_MAINTAINED = 'Y'
+            )
+        ORDER BY sequence_owner, sequence_name
+    """
+    cursor.execute(select_sequences)
+    sequence_rows = cursor.fetchall()
+    sequences: dict[str, Sequence] = {
+        f"{row[4]}.{row[0]}": Sequence(definition=f"min_value: {row[1]}, max_value: {row[2]}, increment_by: {row[3]}, last_number: {row[5]}")
+        for row in sequence_rows
+    }
+    return sequences
+
+
+def fetch_oracle_synonyms(cursor: cursor.Cursor) -> dict[str, Synonym]:
+    """
+    Fetch the list of synonyms from the Oracle database available to the connected user.
+
+    Args:
+        cursor (cursor.Cursor): The Oracle database cursor.
+
+    Returns:
+        dict[str, Synonym]: A dictionary of Synonym objects representing the synonyms in the database.
+    """
+    select_synonyms = """
+        SELECT
+            synonym_name,
+            table_owner,
+            table_name,
+            owner
+        FROM all_synonyms
+        WHERE synonym_name NOT LIKE '%$%'
+            AND owner NOT IN (
+                SELECT DISTINCT username
+                FROM all_users
+                WHERE ORACLE_MAINTAINED = 'Y'
+            )
+            AND table_name NOT LIKE '%$%'
+            AND table_owner NOT IN (
+                SELECT DISTINCT username
+                FROM all_users
+                WHERE ORACLE_MAINTAINED = 'Y'
+            )
+        ORDER BY owner, synonym_name
+    """
+    cursor.execute(select_synonyms)
+    synonym_rows = cursor.fetchall()
+    synonyms: dict[str, Synonym] = {
+        f"{row[3]}.{row[0]}": Synonym(definition=f"from: {row[1]}.{row[2]}, to: {row[3]}.{row[0]}") for row in synonym_rows
+    }
+    return synonyms
+
+
+def fetch_oracle_functions(cursor: cursor.Cursor) -> dict[str, Function]:
+    """
+    Fetch the list of functions from the Oracle database available to the connected user.
+
+    Args:
+        cursor (cursor.Cursor): The Oracle database cursor.
+
+    Returns:
+        dict[str, Function]: A dictionary of Function objects representing the functions in the database.
+    """
+    # Fetch all functions and their DDL definitions using the helper function
+    functions: dict[str, Function] = _get_db_object_and_ddl(cursor, "FUNCTION")
+
+    # For each function, fetch its arguments and append them to the definition
+    for func_name, func in functions.items():
+        function_arguments = _get_obj_arguments(cursor, func_name.split(".")[1])  # Extract object name without schema
+
+        for arg in function_arguments:
+            func.definition += f"{arg[0] if arg[0] else '----'} {arg[2]} {arg[3]}, "  # argument_name data_type in_out
+        func.definition = func.definition.rstrip(", ")  # Remove trailing comma and space
+
+    return functions
+
+
+def _get_db_object_and_ddl(cursor: cursor.Cursor, object_type: str) -> dict[str, DatabaseObjectWithHashedBody]:
+    """
+    Fetch database objects (functions, procedures, packages, etc.) and their DDL definitions from the Oracle database.
+    Helper function to fetch database objects and their DDL definitions.
+
+    Args:
+        cursor (cursor.Cursor): The Oracle database cursor.
+        object_type (str): The type of database object to fetch (e.g., 'FUNCTION', 'PROCEDURE').
+
+    Returns:
+        dict[str, DatabaseObjectWithHashedBody]: A dictionary mapping object names to DatabaseObjectWithHashedBody instances.
+    """
+    select_objects = f"""
+        SELECT
+            owner,
+            object_name,
+            dbms_metadata.get_ddl('{object_type}', object_name, owner) AS ddl
+        FROM all_objects
+        WHERE object_type = '{object_type}'
+            AND object_name NOT LIKE '%$%'
+            AND owner NOT IN (
+                SELECT DISTINCT username
+                FROM all_users
+                WHERE ORACLE_MAINTAINED = 'Y'
+            )
+        ORDER BY owner, object_name
+    """
+    cursor.execute(select_objects)
+    object_rows = cursor.fetchall()
+    objects: dict[str, DatabaseObjectWithHashedBody] = {
+        f"{row[0]}.{row[1]}": DatabaseObjectWithHashedBody(
+            definition="",
+            body=hash_body(row[2].read()) if row[2] else None,
+            # body=row[2].read() if row[2] else None,  # noqa: ERA001 Keep this for debugging purposes to see unhashed DDL in case of issues with hashing
+        )
+        for row in object_rows
+    }
+    return objects
+
+
+def _get_obj_arguments(cursor: cursor.Cursor, object_name: str) -> list[Row]:
+    """
+    Fetch the arguments of a database object (function, procedure) from the Oracle database.
+
+    Args:
+        cursor (cursor.Cursor): The Oracle database cursor.
+        object_name (str): The name of the database object to fetch arguments for.
+
+    Returns:
+        list[Row]: A list of rows representing the arguments of the specified database object.
+    """
+    select_arguments = f"""
+        SELECT
+            argument_name,
+            position,
+            data_type,
+            in_out
+        FROM all_arguments
+        WHERE object_name = '{object_name}'
+        ORDER BY position
+    """
+    cursor.execute(select_arguments)
+    return cursor.fetchall()
+
+
+def fetch_oracle_stored_procedures(cursor: cursor.Cursor) -> dict[str, StoredProcedure]:
+    """
+    Fetch the list of stored procedures from the Oracle database available to the connected user.
+
+    Args:
+        cursor (cursor.Cursor): The Oracle database cursor.
+
+    Returns:
+        dict[str, StoredProcedure]: A dictionary of StoredProcedure objects representing the stored procedures in the database.
+    """
+    # Fetch all procedures and their DDL definitions using the helper function
+    procedures: dict[str, StoredProcedure] = _get_db_object_and_ddl(cursor, "PROCEDURE")
+
+    # For each procedure, fetch its arguments and append them to the definition
+    for proc_name, proc in procedures.items():
+        procedure_arguments = _get_obj_arguments(cursor, proc_name.split(".")[1])  # Extract object name without schema
+
+        for arg in procedure_arguments:
+            proc.definition += f"{arg[0] if arg[0] else '----'} {arg[2]} {arg[3]}, "  # argument_name data_type in_out
+        proc.definition = proc.definition.rstrip(", ")  # Remove trailing comma and space
+
+    return procedures
+
+
+def fetch_oracle_types(cursor: cursor.Cursor) -> dict[str, Type]:
+    """
+    Fetch the list of custom types from the Oracle database available to the connected user.
+
+    Args:
+        cursor (cursor.Cursor): The Oracle database cursor.
+
+    Returns:
+        dict[str, Type]: A dictionary of Type objects representing the custom types in the database.
+    """
+    non_formated_types: dict[str, DatabaseObjectWithHashedBody] = _get_db_object_and_ddl(cursor, "TYPE")
+    types: dict[str, Type] = {
+        type_name: Type(
+            definition=obj.body,  # For types, we want to hash the body (which contains the type definition) instead of the DDL
+        )
+        for type_name, obj in non_formated_types.items()
+    }
+    return types
+
+
+def fetch_oracle_directories(cursor: cursor.Cursor) -> dict[str, Directory]:
+    """
+    Fetch the list of directories from the Oracle database available to the connected user.
+
+    Args:
+        cursor (cursor.Cursor): The Oracle database cursor.
+
+    Returns:
+        dict[str, Directory]: A dictionary of Directory objects representing the directories in the database.
+    """
+    select_directories = """
+        SELECT
+            owner,
+            directory_name,
+            directory_path
+        FROM all_directories
+        WHERE directory_name NOT LIKE '%$%'
+            AND owner NOT IN (
+                SELECT DISTINCT username
+                FROM all_users
+                WHERE ORACLE_MAINTAINED = 'Y'
+            )
+    """
+
+    cursor.execute(select_directories)
+    directory_rows = cursor.fetchall()
+    directories: dict[str, Directory] = {f"{row[0]}.{row[1]}": Directory(definition=f"path: {row[2]}") for row in directory_rows}
+
+    return directories
+
+
+def fetch_oracle_packages(cursor: cursor.Cursor) -> dict[str, Package]:
+    """
+    Fetch the list of packages from the Oracle database available to the connected user.
+
+    Args:
+        cursor (cursor.Cursor): The Oracle database cursor.
+
+    Returns:
+        dict[str, Package]: A dictionary of Package objects representing the packages in the database.
+    """
+    select_packages = """
+        SELECT
+            owner,
+            object_name,
+            dbms_metadata.get_ddl('PACKAGE', object_name, owner) AS ddl
+        FROM all_objects
+        WHERE object_type = 'PACKAGE'
+            AND object_name NOT LIKE '%$%'
+            AND owner NOT IN (
+                SELECT DISTINCT username
+                FROM all_users
+                WHERE ORACLE_MAINTAINED = 'Y'
+            )
+        ORDER BY owner, object_name
+    """
+    cursor.execute(select_packages)
+    package_rows = cursor.fetchall()
+
+    packages: dict[str, Package] = {}
+
+    for row in package_rows:
+        package_name = f"{row[0]}.{row[1]}"  # owner.object_name
+
+        # the ddl returned by dbms_metadata.get_ddl for packages includes both the package specification and body
+        # we need to split them and hash them separately to be able to detect changes in spec vs body
+        pkg_name: str = row[1]
+        ddl_splitter = f"END {pkg_name.lower()};"  # The package specification ends with "END package_name;"
+        dll: str = row[2].read()
+        if ddl_splitter in dll:
+            spec, body = dll.split(ddl_splitter, 1)
+            spec += ddl_splitter  # add the splitter back to the end of the spec
+        else:
+            spec = dll  # If we can't split, just use the whole DDL as spec and leave body empty
+            body = ""
+
+        packages[package_name] = Package(
+            definition=hash_body(spec),
+            body=hash_body(body),
+        )
+
+    return packages

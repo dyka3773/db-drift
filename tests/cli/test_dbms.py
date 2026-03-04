@@ -3,13 +3,13 @@ import contextlib
 from unittest.mock import Mock, patch
 
 from db_drift.cli.cli import cli_arg_parse
-from db_drift.utils.constants import SUPPORTED_DBMS_REGISTRY
+from db_drift.utils.constants import get_supported_dbms_registry
 
 
 @patch("db_drift.cli.cli.argparse.ArgumentParser.parse_args")
 def test_dbms_argument_valid_choices(mock_parse_args: Mock) -> None:
     """Test that --dbms accepts valid DBMS choices."""
-    for dbms in SUPPORTED_DBMS_REGISTRY:
+    for dbms in get_supported_dbms_registry():
         mock_args = argparse.Namespace(
             dbms=dbms,
             output="drift_report.html",
