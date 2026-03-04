@@ -6,6 +6,30 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
 <!-- insertion marker -->
+
+## v1.3.8 (2026-03-04)
+
+### Chores
+
+- **ci**: Remove pip group of dependency checks and only keep the uv automation
+  ([`9d78f5f`](https://github.com/dyka3773/db-drift/commit/9d78f5f7555aa950f670f0d1f2fc00acec10246e))
+
+### Continuous Integration
+
+- Simplify how project is released
+  ([`762fc93`](https://github.com/dyka3773/db-drift/commit/762fc93375f3af57be109c6ca18b38fbcaebcc1f))
+
+### Deps
+
+- Update lockfile
+  ([`96788ab`](https://github.com/dyka3773/db-drift/commit/96788abd5155f68b0687b37920c4107f31af9c9b))
+
+### Documentation
+
+- Update changelog for v1.3.7
+  ([`00e66ae`](https://github.com/dyka3773/db-drift/commit/00e66ae9fefd2fc35902ee158fa34283b1d673db))
+
+
 ## [v1.3.7](https://github.com/dyka3773/db-drift/releases/tag/v1.3.7) - 2026-03-04
 
 <small>[Compare with v1.3.6](https://github.com/dyka3773/db-drift/compare/v1.3.6...v1.3.7)</small>
@@ -96,4 +120,3 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 ## [v1.0.0](https://github.com/dyka3773/db-drift/releases/tag/v1.0.0) - 2025-08-04
 
 <small>[Compare with first commit](https://github.com/dyka3773/db-drift/compare/4741274c923649ec7b499260bc11141a04b5d000...v1.0.0)</small>
-
