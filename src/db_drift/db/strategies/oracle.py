@@ -14,6 +14,7 @@ from db_drift.models import (
     MiningModel,
     Operator,
     Sequence,
+    StoredProcedure,
     Synonym,
     Table,
     Trigger,
@@ -694,3 +695,27 @@ def _get_obj_arguments(cursor: cursor.Cursor, object_name: str) -> list[Row]:
     """
     cursor.execute(select_arguments)
     return cursor.fetchall()
+
+
+def fetch_oracle_stored_procedures(cursor: cursor.Cursor) -> dict[str, StoredProcedure]:
+    """
+    Fetch the list of stored procedures from the Oracle database available to the connected user.
+
+    Args:
+        cursor (cursor.Cursor): The Oracle database cursor.
+
+    Returns:
+        dict[str, StoredProcedure]: A dictionary of StoredProcedure objects representing the stored procedures in the database.
+    """
+    # Fetch all procedures and their DDL definitions using the helper function
+    procedures: dict[str, StoredProcedure] = _get_db_object_and_ddl(cursor, "PROCEDURE")
+
+    # For each procedure, fetch its arguments and append them to the definition
+    for proc_name, proc in procedures.items():
+        procedure_arguments = _get_obj_arguments(cursor, proc_name.split(".")[1])  # Extract object name without schema
+
+        for arg in procedure_arguments:
+            proc.definition += f"{arg[0] if arg[0] else '----'} {arg[2]} {arg[3]}, "  # argument_name data_type in_out
+        proc.definition = proc.definition.rstrip(", ")  # Remove trailing comma and space
+
+    return procedures
