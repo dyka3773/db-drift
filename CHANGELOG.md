@@ -6,6 +6,45 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
 <!-- insertion marker -->
+## [v1.3.6](https://github.com/dyka3773/db-drift/releases/tag/v1.3.6) - 2026-01-19
+
+<small>[Compare with v1.3.5](https://github.com/dyka3773/db-drift/compare/v1.3.5...v1.3.6)</small>
+
+## [v1.3.5](https://github.com/dyka3773/db-drift/releases/tag/v1.3.5) - 2026-01-12
+
+<small>[Compare with v1.3.4](https://github.com/dyka3773/db-drift/compare/v1.3.4...v1.3.5)</small>
+
+## [v1.3.4](https://github.com/dyka3773/db-drift/releases/tag/v1.3.4) - 2026-01-07
+
+<small>[Compare with v1.3.3](https://github.com/dyka3773/db-drift/compare/v1.3.3...v1.3.4)</small>
+
+## [v1.3.3](https://github.com/dyka3773/db-drift/releases/tag/v1.3.3) - 2025-12-15
+
+<small>[Compare with v1.3.2](https://github.com/dyka3773/db-drift/compare/v1.3.2...v1.3.3)</small>
+
+## [v1.3.2](https://github.com/dyka3773/db-drift/releases/tag/v1.3.2) - 2025-12-02
+
+<small>[Compare with v1.3.1](https://github.com/dyka3773/db-drift/compare/v1.3.1...v1.3.2)</small>
+
+## [v1.3.1](https://github.com/dyka3773/db-drift/releases/tag/v1.3.1) - 2025-11-19
+
+<small>[Compare with v1.3.0](https://github.com/dyka3773/db-drift/compare/v1.3.0...v1.3.1)</small>
+
+## [v1.3.0](https://github.com/dyka3773/db-drift/releases/tag/v1.3.0) - 2025-10-21
+
+<small>[Compare with v1.2.0](https://github.com/dyka3773/db-drift/compare/v1.2.0...v1.3.0)</small>
+
+### Features
+
+- add support for table & view columns extraction and remove DatabaseObject name attribute from all classes in order to use dictionaries for faster lookup ([ececb0b](https://github.com/dyka3773/db-drift/commit/ececb0b610cf77207d2666e5a7c4c10df0edd38f) by Hercules Konsoulas).
+- Implement OracleConnector & SQLiteConnector design to fetch db structure and moved stuff around for better clarity and decoupling ([17cf72a](https://github.com/dyka3773/db-drift/commit/17cf72a0b3419432153e67e1b1cf45d3926c1262) by Hercules Konsoulas).
+- create placeholder DB Connectors, a factory method to get the appropriate Connector, a placeholder report generator and a simple-lookup registry to register supported DBMSs ([c4d690e](https://github.com/dyka3773/db-drift/commit/c4d690e6deea474c59ff81888a60216b6185b077) by Hercules Konsoulas).
+- Create generic DVOs for every Structure that can be found in a database Fixes #11 ([44e0e78](https://github.com/dyka3773/db-drift/commit/44e0e7865660420554cf008eee02454d83a07747) by Hercules Konsoulas).
+
+### Code Refactoring
+
+- add copilot suggestions ([dc37514](https://github.com/dyka3773/db-drift/commit/dc37514eb74e42da4777c7239cd41544db4c9ab0) by Hercules Konsoulas).
+
 ## [v1.2.0](https://github.com/dyka3773/db-drift/releases/tag/v1.2.0) - 2025-10-19
 
 <small>[Compare with v1.1.0](https://github.com/dyka3773/db-drift/compare/v1.1.0...v1.2.0)</small>
@@ -53,4 +92,3 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 ## [v1.0.0](https://github.com/dyka3773/db-drift/releases/tag/v1.0.0) - 2025-08-04
 
 <small>[Compare with first commit](https://github.com/dyka3773/db-drift/compare/4741274c923649ec7b499260bc11141a04b5d000...v1.0.0)</small>
-
