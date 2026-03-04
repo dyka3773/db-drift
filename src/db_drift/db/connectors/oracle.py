@@ -6,6 +6,7 @@ from db_drift.db.connectors.base_connector import BaseDBConnector
 from db_drift.db.mappers.constraint_types.oracle import ORACLE_CONSTRAINT_MAPPER
 from db_drift.db.strategies.oracle import (
     fetch_oracle_constraints,
+    fetch_oracle_directories,
     fetch_oracle_editions,
     fetch_oracle_functions,
     fetch_oracle_indexes,
@@ -54,7 +55,7 @@ class OracleConnector(BaseDBConnector):
             # "packages": fetch_oracle_packages,  # noqa: ERA001
             "types": fetch_oracle_types,
             # "jobs": fetch_oracle_jobs,  # noqa: ERA001
-            # "directories": fetch_oracle_directories,  # noqa: ERA001
+            "directories": fetch_oracle_directories,
         }
 
         self.connection_library = oracledb

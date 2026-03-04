@@ -6,6 +6,7 @@ from db_drift.models import (
     Column,
     Constraint,
     DatabaseObjectWithHashedBody,
+    Directory,
     Edition,
     Function,
     Index,
@@ -741,3 +742,34 @@ def fetch_oracle_types(cursor: cursor.Cursor) -> dict[str, Type]:
         for type_name, obj in non_formated_types.items()
     }
     return types
+
+
+def fetch_oracle_directories(cursor: cursor.Cursor) -> dict[str, Directory]:
+    """
+    Fetch the list of directories from the Oracle database available to the connected user.
+
+    Args:
+        cursor (cursor.Cursor): The Oracle database cursor.
+
+    Returns:
+        dict[str, Directory]: A dictionary of Directory objects representing the directories in the database.
+    """
+    select_directories = """
+        SELECT
+            owner,
+            directory_name,
+            directory_path
+        FROM all_directories
+        WHERE directory_name NOT LIKE '%$%'
+            AND owner NOT IN (
+                SELECT DISTINCT username
+                FROM all_users
+                WHERE ORACLE_MAINTAINED = 'Y'
+            )
+    """
+
+    cursor.execute(select_directories)
+    directory_rows = cursor.fetchall()
+    directories: dict[str, Directory] = {f"{row[0]}.{row[1]}": Directory(definition=f"path: {row[2]}") for row in directory_rows}
+
+    return directories
