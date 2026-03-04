@@ -1,3 +1,4 @@
+from functools import partial
 from typing import TYPE_CHECKING
 
 import oracledb
@@ -38,6 +39,8 @@ class OracleConnector(BaseDBConnector):
         """
         super().__init__(connection_string)
 
+        self.constraint_type_mapper: DictConstraintTypeMapper = ORACLE_CONSTRAINT_MAPPER
+
         self.SUPPORTED_OBJECTS_REGISTRY = {
             "tables": fetch_oracle_tables,
             "views": fetch_oracle_views,
@@ -48,7 +51,7 @@ class OracleConnector(BaseDBConnector):
             "operators": fetch_oracle_operators,
             "triggers": fetch_oracle_triggers,
             "indexes": fetch_oracle_indexes,
-            "constraints": lambda cursor: fetch_oracle_constraints(cursor, self.constraint_type_mapper),
+            "constraints": partial(fetch_oracle_constraints, constraint_type_mapper=self.constraint_type_mapper),
             "sequences": fetch_oracle_sequences,
             "synonyms": fetch_oracle_synonyms,
             "functions": fetch_oracle_functions,
@@ -60,4 +63,3 @@ class OracleConnector(BaseDBConnector):
         }
 
         self.connection_library = oracledb
-        self.constraint_type_mapper: DictConstraintTypeMapper = ORACLE_CONSTRAINT_MAPPER
