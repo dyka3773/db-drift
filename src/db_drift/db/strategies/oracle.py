@@ -2,7 +2,21 @@ from oracledb import cursor
 from sqlalchemy import Row
 
 from db_drift.db.mappers.constraint_types.base import ConstraintTypeMapper
-from db_drift.models import Column, Constraint, Edition, Index, IndexType, MaterializedView, MiningModel, Operator, Sequence, Table, Trigger, View
+from db_drift.models import (
+    Column,
+    Constraint,
+    Edition,
+    Index,
+    IndexType,
+    MaterializedView,
+    MiningModel,
+    Operator,
+    Sequence,
+    Synonym,
+    Table,
+    Trigger,
+    View,
+)
 from db_drift.utils.string import hash_body
 
 
@@ -551,3 +565,42 @@ def fetch_oracle_sequences(cursor: cursor.Cursor) -> dict[str, Sequence]:
         for row in sequence_rows
     }
     return sequences
+
+
+def fetch_oracle_synonyms(cursor: cursor.Cursor) -> dict[str, Synonym]:
+    """
+    Fetch the list of synonyms from the Oracle database available to the connected user.
+
+    Args:
+        cursor (cursor.Cursor): The Oracle database cursor.
+
+    Returns:
+        dict[str, Synonym]: A dictionary of Synonym objects representing the synonyms in the database.
+    """
+    select_synonyms = """
+        SELECT
+            synonym_name,
+            table_owner,
+            table_name,
+            owner
+        FROM all_synonyms
+        WHERE synonym_name NOT LIKE '%$%'
+            AND owner NOT IN (
+                SELECT DISTINCT username
+                FROM all_users
+                WHERE ORACLE_MAINTAINED = 'Y'
+            )
+            AND table_name NOT LIKE '%$%'
+            AND table_owner NOT IN (
+                SELECT DISTINCT username
+                FROM all_users
+                WHERE ORACLE_MAINTAINED = 'Y'
+            )
+        ORDER BY owner, synonym_name
+    """
+    cursor.execute(select_synonyms)
+    synonym_rows = cursor.fetchall()
+    synonyms: dict[str, Synonym] = {
+        f"{row[3]}.{row[0]}": Synonym(definition=f"from: {row[1]}.{row[2]}, to: {row[3]}.{row[0]}") for row in synonym_rows
+    }
+    return synonyms
