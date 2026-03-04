@@ -88,3 +88,40 @@ CREATE OR REPLACE TYPE temp_list AS TABLE OF VARCHAR2(100);
 /
 
 COMMIT;
+
+CREATE OR REPLACE PACKAGE employee_pkg AS
+  FUNCTION get_employee_name (p_employee_id IN employees.employee_id%type)
+    RETURN VARCHAR2;
+  FUNCTION get_employee_names (p_department_id IN employees.department_id%type)
+    RETURN temp_list;
+END employee_pkg;
+/
+
+CREATE OR REPLACE PACKAGE BODY employee_pkg AS
+  FUNCTION get_employee_name (p_employee_id IN employees.employee_id%type)
+    RETURN VARCHAR2
+  IS
+    v_employee_name VARCHAR2(100);
+  BEGIN
+    SELECT first_name || ' ' || last_name
+      INTO v_employee_name
+      FROM employees
+      WHERE employee_id = p_employee_id;
+    RETURN v_employee_name;
+  END get_employee_name;
+
+  FUNCTION get_employee_names (p_department_id IN employees.department_id%type)
+    RETURN temp_list
+  IS
+    v_employee_names temp_list;
+  BEGIN
+    SELECT first_name || ' ' || last_name
+      BULK COLLECT INTO v_employee_names
+      FROM employees
+      WHERE department_id = p_department_id;
+    RETURN v_employee_names;
+  END get_employee_names;
+END employee_pkg;
+/
+
+COMMIT;

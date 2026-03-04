@@ -14,6 +14,7 @@ from db_drift.models import (
     MaterializedView,
     MiningModel,
     Operator,
+    Package,
     Sequence,
     StoredProcedure,
     Synonym,
@@ -773,3 +774,56 @@ def fetch_oracle_directories(cursor: cursor.Cursor) -> dict[str, Directory]:
     directories: dict[str, Directory] = {f"{row[0]}.{row[1]}": Directory(definition=f"path: {row[2]}") for row in directory_rows}
 
     return directories
+
+
+def fetch_oracle_packages(cursor: cursor.Cursor) -> dict[str, Package]:
+    """
+    Fetch the list of packages from the Oracle database available to the connected user.
+
+    Args:
+        cursor (cursor.Cursor): The Oracle database cursor.
+
+    Returns:
+        dict[str, Package]: A dictionary of Package objects representing the packages in the database.
+    """
+    select_packages = """
+        SELECT
+            owner,
+            object_name,
+            dbms_metadata.get_ddl('PACKAGE', object_name, owner) AS ddl
+        FROM all_objects
+        WHERE object_type = 'PACKAGE'
+            AND object_name NOT LIKE '%$%'
+            AND owner NOT IN (
+                SELECT DISTINCT username
+                FROM all_users
+                WHERE ORACLE_MAINTAINED = 'Y'
+            )
+        ORDER BY owner, object_name
+    """
+    cursor.execute(select_packages)
+    package_rows = cursor.fetchall()
+
+    packages: dict[str, Package] = {}
+
+    for row in package_rows:
+        package_name = f"{row[0]}.{row[1]}"  # owner.object_name
+
+        # the ddl returned by dbms_metadata.get_ddl for packages includes both the package specification and body
+        # we need to split them and hash them separately to be able to detect changes in spec vs body
+        pkg_name: str = row[1]
+        ddl_splitter = f"END {pkg_name.lower()};"  # The package specification ends with "END package_name;"
+        dll: str = row[2].read()
+        if ddl_splitter in dll:
+            spec, body = dll.split(ddl_splitter, 1)
+            spec += ddl_splitter  # add the splitter back to the end of the spec
+        else:
+            spec = dll  # If we can't split, just use the whole DDL as spec and leave body empty
+            body = ""
+
+        packages[package_name] = Package(
+            definition=hash_body(spec),
+            body=hash_body(body),
+        )
+
+    return packages
