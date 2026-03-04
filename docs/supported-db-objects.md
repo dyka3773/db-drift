@@ -13,32 +13,32 @@ The following database objects are currently supported (at least partially) by d
 - [x] Directories
 - [x] Packages/Packages Bodies
 - [x] Synonyms
-- [ ] Editions
-- [ ] Mining Models
-- [ ] Custom Operators
-- [ ] Index Types
+- [x] Editions
+- [x] Mining Models
+- [x] Custom Operators
+- [x] Index Types
 - [ ] Audit Policies
 - [ ] Scheduler Jobs
 
 ## Oracle
 The following objects are fully supported for Oracle databases:
-- [ ] Tables
-- [ ] Views
-- [ ] Materialized Views
-- [ ] Indexes
+- [x] Tables
+- [x] Views
+- [x] Materialized Views
+- [x] Indexes
 - [ ] Sequences
 - [ ] Functions
-- [ ] Triggers
+- [x] Triggers
 - [ ] Stored Procedures
 - [ ] Custom Types
 - [ ] Constraints
 - [ ] Directories
 - [ ] Packages/Packages Bodies
 - [ ] Synonyms
-- [ ] Editions
-- [ ] Mining Models
-- [ ] Custom Operators
-- [ ] Index Types
+- [x] Editions
+- [x] Mining Models
+- [x] Custom Operators
+- [x] Index Types
 - [ ] Audit Policies
 - [ ] Scheduler Jobs
 

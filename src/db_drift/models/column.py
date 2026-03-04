@@ -8,4 +8,4 @@ class Column(DatabaseObjectWithDoc):
     """Represents a database column with comprehensive metadata."""
 
     data_type: str
-    is_nullable: bool
+    is_nullable: bool | None
