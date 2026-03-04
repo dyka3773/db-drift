@@ -12,6 +12,7 @@ from db_drift.db.strategies.oracle import (
     fetch_oracle_materialized_views,
     fetch_oracle_mining_models,
     fetch_oracle_operators,
+    fetch_oracle_sequences,
     fetch_oracle_tables,
     fetch_oracle_triggers,
     fetch_oracle_views,
@@ -42,7 +43,7 @@ class OracleConnector(BaseDBConnector):
             "triggers": fetch_oracle_triggers,
             "indexes": fetch_oracle_indexes,
             "constraints": lambda cursor: fetch_oracle_constraints(cursor, self.constraint_type_mapper),
-            # "sequences": fetch_oracle_sequences,  # noqa: ERA001
+            "sequences": fetch_oracle_sequences,
             # "synonyms": fetch_oracle_synonyms,  # noqa: ERA001
             # "functions": fetch_oracle_functions,  # noqa: ERA001
             # "procedures": fetch_oracle_procedures,  # noqa: ERA001

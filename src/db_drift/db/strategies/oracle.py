@@ -2,17 +2,7 @@ from oracledb import cursor
 from sqlalchemy import Row
 
 from db_drift.db.mappers.constraint_types.base import ConstraintTypeMapper
-from db_drift.models.column import Column
-from db_drift.models.constraint import Constraint
-from db_drift.models.edition import Edition
-from db_drift.models.index import Index
-from db_drift.models.indextype import IndexType
-from db_drift.models.materialized_view import MaterializedView
-from db_drift.models.mining_model import MiningModel
-from db_drift.models.operator import Operator
-from db_drift.models.table import Table
-from db_drift.models.trigger import Trigger
-from db_drift.models.view import View
+from db_drift.models import Column, Constraint, Edition, Index, IndexType, MaterializedView, MiningModel, Operator, Sequence, Table, Trigger, View
 from db_drift.utils.string import hash_body
 
 
@@ -525,3 +515,39 @@ def fetch_oracle_constraints(cursor: cursor.Cursor, constraint_type_mapper: Cons
         if row[5]:  # column_name can be None for some constraint types
             constraints[constraint_name].columns.add(row[5])
     return constraints
+
+
+def fetch_oracle_sequences(cursor: cursor.Cursor) -> dict[str, Sequence]:
+    """
+    Fetch the list of sequences from the Oracle database available to the connected user.
+
+    Args:
+        cursor (cursor.Cursor): The Oracle database cursor.
+
+    Returns:
+        dict[str, Sequence]: A dictionary of Sequence objects representing the sequences in the database.
+    """
+    select_sequences = """
+        SELECT
+            sequence_name,
+            min_value,
+            max_value,
+            increment_by,
+            sequence_owner,
+            last_number
+        FROM all_sequences
+        WHERE sequence_name NOT LIKE '%$%'
+            AND sequence_owner NOT IN (
+                SELECT DISTINCT username
+                FROM all_users
+                WHERE ORACLE_MAINTAINED = 'Y'
+            )
+        ORDER BY sequence_owner, sequence_name
+    """
+    cursor.execute(select_sequences)
+    sequence_rows = cursor.fetchall()
+    sequences: dict[str, Sequence] = {
+        f"{row[4]}.{row[0]}": Sequence(definition=f"min_value: {row[1]}, max_value: {row[2]}, increment_by: {row[3]}, last_number: {row[5]}")
+        for row in sequence_rows
+    }
+    return sequences
