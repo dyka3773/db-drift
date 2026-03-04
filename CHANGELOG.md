@@ -7,6 +7,52 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 <!-- insertion marker -->
 
+## v1.4.0 (2026-03-04)
+
+### Bug Fixes
+
+- **oracle**: Correct the Constraint mapping to show the Enum values
+  ([`f13478d`](https://github.com/dyka3773/db-drift/commit/f13478dbb1f0f4cd43995b8985f98f830c3027f3))
+
+### Features
+
+- Add support for database constraints, constraint type mapping between different DBMSs and created
+  a new abstract model to distinguish between objects that need column details and objects with just
+  column references
+  ([`54b4e32`](https://github.com/dyka3773/db-drift/commit/54b4e329bd541f1a61610d79b62c198da9b82852))
+
+- **oracle**: Add support for custom directory export
+  ([`014639f`](https://github.com/dyka3773/db-drift/commit/014639fedc85f5f84d73a3dafa76c2fb8a9666d6))
+
+- **oracle**: Add support for custom type extraction
+  ([`fc599ec`](https://github.com/dyka3773/db-drift/commit/fc599ec93907ba4c613738e6e3c5bf9271b8497b))
+
+- **oracle**: Add support for oracle sequence exporting
+  ([`ee0b57e`](https://github.com/dyka3773/db-drift/commit/ee0b57ec432ff8638e6e9584a6084275dd51c65d))
+
+- **oracle**: Add support for packages
+  ([`61a5ab5`](https://github.com/dyka3773/db-drift/commit/61a5ab5ca9a95cc56d9a45142130088d2e43513b))
+
+- **oracle**: Add support for stored functions extraction
+  ([`0593635`](https://github.com/dyka3773/db-drift/commit/0593635413e055fc4d321b7a24fbccf6ecbbd8d4))
+
+- **oracle**: Add support for stored procedure extraction
+  ([`c186b72`](https://github.com/dyka3773/db-drift/commit/c186b72580b31bf859e9d6eb13c765326678cbb7))
+
+- **oracle**: Add support for synonym extraction
+  ([`0bca1ad`](https://github.com/dyka3773/db-drift/commit/0bca1ada6a19d2f725d7d6353d0d90cff562fb30))
+
+### Refactoring
+
+- **oracle**: Use partial function instead of lambda for constraint fetching
+  ([`7bee375`](https://github.com/dyka3773/db-drift/commit/7bee3759e43d516a39549ede49a9b55c8267163f))
+
+### Testing
+
+- Fix test import
+  ([`fa9e2bf`](https://github.com/dyka3773/db-drift/commit/fa9e2bf2e5b16d4fcf83eb2c2dd45ae4dbd558f6))
+
+
 ## v1.3.8 (2026-03-04)
 
 ### Chores
