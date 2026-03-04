@@ -17,7 +17,7 @@ class DictConstraintTypeMapper(ConstraintTypeMapper):
     def map(self, native_value: str) -> DBConstraintType:
         key = native_value.strip().upper()
         try:
-            return self.mapping[key]
+            return self.mapping[key].value
         except KeyError as exc:
             msg = f"Unsupported constraint type: {native_value!r}"
             raise ValueError(msg) from exc
