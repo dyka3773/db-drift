@@ -18,6 +18,7 @@ from db_drift.models import (
     Synonym,
     Table,
     Trigger,
+    Type,
     View,
 )
 from db_drift.utils.string import hash_body
@@ -666,6 +667,7 @@ def _get_db_object_and_ddl(cursor: cursor.Cursor, object_type: str) -> dict[str,
         f"{row[0]}.{row[1]}": DatabaseObjectWithHashedBody(
             definition="",
             body=hash_body(row[2].read()) if row[2] else None,
+            # body=row[2].read() if row[2] else None,  # noqa: ERA001 Keep this for debugging purposes to see unhashed DDL in case of issues with hashing
         )
         for row in object_rows
     }
@@ -719,3 +721,23 @@ def fetch_oracle_stored_procedures(cursor: cursor.Cursor) -> dict[str, StoredPro
         proc.definition = proc.definition.rstrip(", ")  # Remove trailing comma and space
 
     return procedures
+
+
+def fetch_oracle_types(cursor: cursor.Cursor) -> dict[str, Type]:
+    """
+    Fetch the list of custom types from the Oracle database available to the connected user.
+
+    Args:
+        cursor (cursor.Cursor): The Oracle database cursor.
+
+    Returns:
+        dict[str, Type]: A dictionary of Type objects representing the custom types in the database.
+    """
+    non_formated_types: dict[str, DatabaseObjectWithHashedBody] = _get_db_object_and_ddl(cursor, "TYPE")
+    types: dict[str, Type] = {
+        type_name: Type(
+            definition=obj.body,  # For types, we want to hash the body (which contains the type definition) instead of the DDL
+        )
+        for type_name, obj in non_formated_types.items()
+    }
+    return types

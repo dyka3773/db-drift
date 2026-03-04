@@ -83,3 +83,8 @@ END get_employee_name;
 /
 
 COMMIT;
+
+CREATE OR REPLACE TYPE temp_list AS TABLE OF VARCHAR2(100);
+/
+
+COMMIT;

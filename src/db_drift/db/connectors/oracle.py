@@ -18,6 +18,7 @@ from db_drift.db.strategies.oracle import (
     fetch_oracle_synonyms,
     fetch_oracle_tables,
     fetch_oracle_triggers,
+    fetch_oracle_types,
     fetch_oracle_views,
 )
 
@@ -51,7 +52,7 @@ class OracleConnector(BaseDBConnector):
             "functions": fetch_oracle_functions,
             "procedures": fetch_oracle_stored_procedures,
             # "packages": fetch_oracle_packages,  # noqa: ERA001
-            # "types": fetch_oracle_types,  # noqa: ERA001
+            "types": fetch_oracle_types,
             # "jobs": fetch_oracle_jobs,  # noqa: ERA001
             # "directories": fetch_oracle_directories,  # noqa: ERA001
         }
