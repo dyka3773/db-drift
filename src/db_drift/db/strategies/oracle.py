@@ -499,13 +499,13 @@ def fetch_oracle_constraints(cursor: cursor.Cursor, constraint_type_mapper: Cons
             C.table_name,
             C.delete_rule,
             C.search_condition,
-            IC.column_name,
+            CC.column_name,
             C.owner
         FROM all_constraints C
-            LEFT JOIN all_ind_columns IC
-                ON (C.index_name = IC.index_name
-                    AND C.index_owner = IC.index_owner
-                    AND C.table_name = IC.table_name)
+            LEFT JOIN all_cons_columns CC
+                ON (C.owner = CC.owner
+                    AND C.constraint_name = CC.constraint_name
+                    AND C.table_name = CC.table_name)
         WHERE C.constraint_name NOT LIKE '%$%'
             AND C.owner NOT IN (
                 SELECT DISTINCT username
@@ -514,7 +514,7 @@ def fetch_oracle_constraints(cursor: cursor.Cursor, constraint_type_mapper: Cons
             )
             AND C.table_name NOT LIKE '%$%'
             AND C.constraint_name NOT LIKE '%SYS_%'
-        ORDER BY C.owner, C.table_name, C.constraint_name, IC.column_position
+        ORDER BY C.owner, C.table_name, C.constraint_name, CC.position
     """
     cursor.execute(select_constraints)
     constraint_rows = cursor.fetchall()
