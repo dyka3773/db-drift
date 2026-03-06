@@ -1,12 +1,13 @@
 from dataclasses import dataclass
 
-from db_drift.models.abstract_models import DatabaseObjectWithDefinition
+from db_drift.models.abstract_models import DatabaseObjectWithDefinitionAndDoc
 
 
 @dataclass
-class Edition(DatabaseObjectWithDefinition): ...
+class Edition(DatabaseObjectWithDefinitionAndDoc): ...
 
 
-# Edition inherits all attributes from DatabaseObjectWithDefinition
+# Edition inherits all attributes from DatabaseObjectWithDefinitionAndDoc
 # which includes:
 # - definition: str
+# - doc: str

@@ -668,8 +668,8 @@ def _get_db_object_and_ddl(cursor: cursor.Cursor, object_type: str) -> dict[str,
     objects: dict[str, DatabaseObjectWithHashedBody] = {
         f"{row[0]}.{row[1]}": DatabaseObjectWithHashedBody(
             definition="",
-            body=hash_body(row[2].read()) if row[2] else None,
-            # body=row[2].read() if row[2] else None,  # noqa: ERA001 Keep this for debugging purposes to see unhashed DDL in case of issues with hashing
+            body=hash_body(row[2].read()) if row[2] else "",
+            # body=row[2].read() if row[2] else "",  # noqa: ERA001 Keep this for debugging purposes to see unhashed DDL in case of issues with hashing
         )
         for row in object_rows
     }

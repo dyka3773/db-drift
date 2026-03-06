@@ -14,7 +14,7 @@ class ConstraintTypeMapper(ABC):
 class DictConstraintTypeMapper(ConstraintTypeMapper):
     mapping: dict[str, DBConstraintType]
 
-    def map(self, native_value: str) -> DBConstraintType:
+    def map(self, native_value: str) -> str:
         key = native_value.strip().upper()
         try:
             return self.mapping[key].value
