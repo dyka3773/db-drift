@@ -64,6 +64,16 @@ CREATE TABLE IF NOT EXISTS employees (
         FOREIGN KEY (job_id) REFERENCES jobs (job_id),
         FOREIGN KEY (department_id) REFERENCES departments (department_id)
     );
+    
+    -- Add a trigger
+    CREATE TRIGGER update_employee_salary
+    AFTER UPDATE OF salary ON employees
+    FOR EACH ROW
+    BEGIN
+        INSERT INTO job_history (employee_id, start_date, end_date, job_id, department_id)
+        VALUES (OLD.employee_id, OLD.hire_date, CURRENT_TIMESTAMP, OLD.job_id, OLD.department_id);
+    END;
+    
 """
 
 UPDATE_DB_TABLES = """

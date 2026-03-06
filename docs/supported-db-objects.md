@@ -51,12 +51,9 @@ Notes:
 The following objects are fully supported for SQLite databases:
 - [ ] Tables
 - [ ] Views
-- [ ] Materialized Views
 - [ ] Indexes
 - [ ] Sequences
-- [ ] Functions
-- [ ] Triggers
-- [ ] Stored Procedures
+- [x] Triggers
 - [ ] Custom Types
 - [ ] Constraints
 - [ ] Directories

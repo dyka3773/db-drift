@@ -1,6 +1,7 @@
 import sqlite3
 
 from db_drift.db.connectors.base_connector import BaseDBConnector
+from db_drift.db.strategies.sqlite import fetch_sqlite_triggers
 
 
 class SQLiteConnector(BaseDBConnector):
@@ -17,7 +18,7 @@ class SQLiteConnector(BaseDBConnector):
             # "tables": self.fetch_sqlite_tables,  # noqa: ERA001
             # "views": self.fetch_sqlite_views,  # noqa: ERA001
             # "indexes": self.fetch_sqlite_indexes,  # noqa: ERA001
-            # "triggers": self.fetch_sqlite_triggers,  # noqa: ERA001
+            "triggers": fetch_sqlite_triggers,
         }
 
         self.connection_library = sqlite3
