@@ -43,7 +43,7 @@ def get_supported_dbms_registry() -> dict[str, type["BaseDBConnector"]]:
 
 
 @unique
-class DBConstraintType(Enum):
+class DBConstraintTypeEnum(Enum):
     PRIMARY_KEY = "PRIMARY KEY"
     FOREIGN_KEY = "FOREIGN KEY"
     UNIQUE = "UNIQUE"

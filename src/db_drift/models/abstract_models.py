@@ -26,3 +26,8 @@ class DatabaseObjectWithDefinition(DatabaseObject):
     """Database object defined by a simple definition string."""
 
     definition: str
+
+
+@dataclass
+class DatabaseObjectWithDefinitionAndDoc(DatabaseObjectWithDefinition, DatabaseObjectWithDoc):
+    """Database object that has both a definition and documentation."""

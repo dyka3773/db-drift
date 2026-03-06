@@ -444,7 +444,10 @@ def fetch_oracle_indexes(cursor: cursor.Cursor) -> dict[str, Index]:
             aic.column_name,
             ai.owner
         FROM all_indexes ai
-            JOIN all_ind_columns aic ON ai.index_name = aic.index_name AND ai.table_name = aic.table_name
+            JOIN all_ind_columns aic
+                ON ai.index_name = aic.index_name
+                AND ai.table_name = aic.table_name
+                AND ai.owner = aic.index_owner -- Different owners can have indexes with the same name
         WHERE ai.index_name NOT LIKE '%$%'
             AND ai.owner NOT IN (
                 SELECT DISTINCT username
@@ -496,13 +499,13 @@ def fetch_oracle_constraints(cursor: cursor.Cursor, constraint_type_mapper: Cons
             C.table_name,
             C.delete_rule,
             C.search_condition,
-            IC.column_name,
+            CC.column_name,
             C.owner
         FROM all_constraints C
-            LEFT JOIN all_ind_columns IC
-                ON (C.index_name = IC.index_name
-                    AND C.index_owner = IC.index_owner
-                    AND C.table_name = IC.table_name)
+            LEFT JOIN all_cons_columns CC
+                ON (C.owner = CC.owner
+                    AND C.constraint_name = CC.constraint_name
+                    AND C.table_name = CC.table_name)
         WHERE C.constraint_name NOT LIKE '%$%'
             AND C.owner NOT IN (
                 SELECT DISTINCT username
@@ -511,7 +514,7 @@ def fetch_oracle_constraints(cursor: cursor.Cursor, constraint_type_mapper: Cons
             )
             AND C.table_name NOT LIKE '%$%'
             AND C.constraint_name NOT LIKE '%SYS_%'
-        ORDER BY C.owner, C.table_name, C.constraint_name, IC.column_position
+        ORDER BY C.owner, C.table_name, C.constraint_name, CC.position
     """
     cursor.execute(select_constraints)
     constraint_rows = cursor.fetchall()
@@ -639,7 +642,11 @@ def fetch_oracle_functions(cursor: cursor.Cursor) -> dict[str, Function]:
 def _get_db_object_and_ddl(cursor: cursor.Cursor, object_type: str) -> dict[str, DatabaseObjectWithHashedBody]:
     """
     Fetch database objects (functions, procedures, packages, etc.) and their DDL definitions from the Oracle database.
-    Helper function to fetch database objects and their DDL definitions.
+
+    Note:
+        In case for some reason the body is empty, we'd rather show it as empty
+        instead of hashing an empty string which would give a consistent hash value
+        and hide the fact that the body is actually missing.
 
     Args:
         cursor (cursor.Cursor): The Oracle database cursor.
@@ -668,8 +675,8 @@ def _get_db_object_and_ddl(cursor: cursor.Cursor, object_type: str) -> dict[str,
     objects: dict[str, DatabaseObjectWithHashedBody] = {
         f"{row[0]}.{row[1]}": DatabaseObjectWithHashedBody(
             definition="",
-            body=hash_body(row[2].read()) if row[2] else None,
-            # body=row[2].read() if row[2] else None,  # noqa: ERA001 Keep this for debugging purposes to see unhashed DDL in case of issues with hashing
+            body=hash_body(row[2].read()) if row[2] else "",
+            # body=row[2].read() if row[2] else "",  # noqa: ERA001 Keep this for debugging purposes to see unhashed DDL in case of issues with hashing
         )
         for row in object_rows
     }
@@ -687,17 +694,17 @@ def _get_obj_arguments(cursor: cursor.Cursor, object_name: str) -> list[Row]:
     Returns:
         list[Row]: A list of rows representing the arguments of the specified database object.
     """
-    select_arguments = f"""
+    select_arguments = """
         SELECT
             argument_name,
             position,
             data_type,
             in_out
         FROM all_arguments
-        WHERE object_name = '{object_name}'
+        WHERE object_name = :object_name
         ORDER BY position
     """
-    cursor.execute(select_arguments)
+    cursor.execute(select_arguments, object_name=object_name)
     return cursor.fetchall()
 
 
@@ -735,12 +742,12 @@ def fetch_oracle_types(cursor: cursor.Cursor) -> dict[str, Type]:
     Returns:
         dict[str, Type]: A dictionary of Type objects representing the custom types in the database.
     """
-    non_formated_types: dict[str, DatabaseObjectWithHashedBody] = _get_db_object_and_ddl(cursor, "TYPE")
+    non_formatted_types: dict[str, DatabaseObjectWithHashedBody] = _get_db_object_and_ddl(cursor, "TYPE")
     types: dict[str, Type] = {
         type_name: Type(
             definition=obj.body,  # For types, we want to hash the body (which contains the type definition) instead of the DDL
         )
-        for type_name, obj in non_formated_types.items()
+        for type_name, obj in non_formatted_types.items()
     }
     return types
 
@@ -813,12 +820,12 @@ def fetch_oracle_packages(cursor: cursor.Cursor) -> dict[str, Package]:
         # we need to split them and hash them separately to be able to detect changes in spec vs body
         pkg_name: str = row[1]
         ddl_splitter = f"END {pkg_name.lower()};"  # The package specification ends with "END package_name;"
-        dll: str = row[2].read()
-        if ddl_splitter in dll:
-            spec, body = dll.split(ddl_splitter, 1)
+        ddl: str = row[2].read()
+        if ddl_splitter in ddl:
+            spec, body = ddl.split(ddl_splitter, 1)
             spec += ddl_splitter  # add the splitter back to the end of the spec
         else:
-            spec = dll  # If we can't split, just use the whole DDL as spec and leave body empty
+            spec = ddl  # If we can't split, just use the whole DDL as spec and leave body empty
             body = ""
 
         packages[package_name] = Package(
