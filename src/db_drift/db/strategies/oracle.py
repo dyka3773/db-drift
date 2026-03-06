@@ -642,7 +642,11 @@ def fetch_oracle_functions(cursor: cursor.Cursor) -> dict[str, Function]:
 def _get_db_object_and_ddl(cursor: cursor.Cursor, object_type: str) -> dict[str, DatabaseObjectWithHashedBody]:
     """
     Fetch database objects (functions, procedures, packages, etc.) and their DDL definitions from the Oracle database.
-    Helper function to fetch database objects and their DDL definitions.
+
+    Note:
+        In case for some reason the body is empty, we'd rather show it as empty
+        instead of hashing an empty string which would give a consistent hash value
+        and hide the fact that the body is actually missing.
 
     Args:
         cursor (cursor.Cursor): The Oracle database cursor.
