@@ -444,7 +444,10 @@ def fetch_oracle_indexes(cursor: cursor.Cursor) -> dict[str, Index]:
             aic.column_name,
             ai.owner
         FROM all_indexes ai
-            JOIN all_ind_columns aic ON ai.index_name = aic.index_name AND ai.table_name = aic.table_name
+            JOIN all_ind_columns aic
+                ON ai.index_name = aic.index_name
+                AND ai.table_name = aic.table_name
+                AND ai.owner = aic.index_owner -- Different owners can have indexes with the same name
         WHERE ai.index_name NOT LIKE '%$%'
             AND ai.owner NOT IN (
                 SELECT DISTINCT username
@@ -687,17 +690,17 @@ def _get_obj_arguments(cursor: cursor.Cursor, object_name: str) -> list[Row]:
     Returns:
         list[Row]: A list of rows representing the arguments of the specified database object.
     """
-    select_arguments = f"""
+    select_arguments = """
         SELECT
             argument_name,
             position,
             data_type,
             in_out
         FROM all_arguments
-        WHERE object_name = '{object_name}'
+        WHERE object_name = :object_name
         ORDER BY position
     """
-    cursor.execute(select_arguments)
+    cursor.execute(select_arguments, object_name=object_name)
     return cursor.fetchall()
 
 
@@ -735,12 +738,12 @@ def fetch_oracle_types(cursor: cursor.Cursor) -> dict[str, Type]:
     Returns:
         dict[str, Type]: A dictionary of Type objects representing the custom types in the database.
     """
-    non_formated_types: dict[str, DatabaseObjectWithHashedBody] = _get_db_object_and_ddl(cursor, "TYPE")
+    non_formatted_types: dict[str, DatabaseObjectWithHashedBody] = _get_db_object_and_ddl(cursor, "TYPE")
     types: dict[str, Type] = {
         type_name: Type(
             definition=obj.body,  # For types, we want to hash the body (which contains the type definition) instead of the DDL
         )
-        for type_name, obj in non_formated_types.items()
+        for type_name, obj in non_formatted_types.items()
     }
     return types
 
