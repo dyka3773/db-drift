@@ -2,11 +2,7 @@ import sqlite3
 from collections.abc import Callable
 from typing import TypeVar
 
-from db_drift.models.column import Column
-from db_drift.models.index import Index
-from db_drift.models.table import Table
-from db_drift.models.trigger import Trigger
-from db_drift.models.view import View
+from db_drift.models import Column, Index, Table, Trigger, View
 from db_drift.utils.string import hash_body
 
 PRAGMA_TABLE_INFO_NAME_INDEX = 1
@@ -127,7 +123,17 @@ def _fetch_sqlite_table_like_objects(
     object_type: str,
     model_factory: Callable[..., TableLike],
 ) -> dict[str, TableLike]:
-    """Fetch table-like SQLite objects and their columns from the database catalog."""
+    """
+    Fetch table-like SQLite objects and their columns from the database catalog.
+
+    Args:
+        cursor (sqlite3.Cursor): The SQLite database cursor.
+        object_type (str): The type of object to fetch ('table' or 'view').
+        model_factory (Callable[..., TableLike]): A factory function to create the appropriate model (Table or View).
+
+    Returns:
+        dict[str, TableLike]: A dictionary of TableLike objects keyed by object name.
+    """
     select_objects = f"""
         SELECT
             name
