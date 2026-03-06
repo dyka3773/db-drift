@@ -1,7 +1,7 @@
 import sqlite3
 
 from db_drift.db.connectors.base_connector import BaseDBConnector
-from db_drift.db.strategies.sqlite import fetch_sqlite_indexes, fetch_sqlite_triggers
+from db_drift.db.strategies.sqlite import fetch_sqlite_indexes, fetch_sqlite_tables, fetch_sqlite_triggers, fetch_sqlite_views
 
 
 class SQLiteConnector(BaseDBConnector):
@@ -15,8 +15,8 @@ class SQLiteConnector(BaseDBConnector):
         super().__init__(connection_string)
 
         self.SUPPORTED_OBJECTS_REGISTRY = {
-            # "tables": self.fetch_sqlite_tables,  # noqa: ERA001
-            # "views": self.fetch_sqlite_views,  # noqa: ERA001
+            "tables": fetch_sqlite_tables,
+            "views": fetch_sqlite_views,
             "indexes": fetch_sqlite_indexes,
             "triggers": fetch_sqlite_triggers,
         }

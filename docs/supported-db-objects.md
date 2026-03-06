@@ -49,8 +49,8 @@ Notes:
 
 ## SQLite
 The following objects are fully supported for SQLite databases:
-- [ ] Tables
-- [ ] Views
+- [x] Tables
+- [x] Views
 - [x] Indexes
 - [ ] Sequences
 - [x] Triggers
