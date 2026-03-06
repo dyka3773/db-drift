@@ -21,7 +21,7 @@ The following database objects are currently supported (at least partially) by d
 - [ ] Scheduler Jobs
 
 ## Oracle
-The following objects are fully supported for Oracle databases:
+The following Oracle object types are currently extracted by `db-drift`:
 - [x] Tables
 - [x] Views
 - [x] Materialized Views
@@ -41,6 +41,11 @@ The following objects are fully supported for Oracle databases:
 - [x] Index Types
 - [ ] Audit Policies
 - [ ] Scheduler Jobs
+
+Notes:
+- Oracle support is under active development and should be treated as evolving.
+- Object-level support does not guarantee complete parity for every object attribute in all Oracle versions/environments.
+- See [`docs/oracle-support.md`](oracle-support.md) for implementation details and known caveats.
 
 ## SQLite
 The following objects are fully supported for SQLite databases:
