@@ -51,7 +51,7 @@ Notes:
 The following objects are fully supported for SQLite databases:
 - [ ] Tables
 - [ ] Views
-- [ ] Indexes
+- [x] Indexes
 - [ ] Sequences
 - [x] Triggers
 - [ ] Custom Types
