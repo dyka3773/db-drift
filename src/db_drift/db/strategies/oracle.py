@@ -816,12 +816,12 @@ def fetch_oracle_packages(cursor: cursor.Cursor) -> dict[str, Package]:
         # we need to split them and hash them separately to be able to detect changes in spec vs body
         pkg_name: str = row[1]
         ddl_splitter = f"END {pkg_name.lower()};"  # The package specification ends with "END package_name;"
-        dll: str = row[2].read()
-        if ddl_splitter in dll:
-            spec, body = dll.split(ddl_splitter, 1)
+        ddl: str = row[2].read()
+        if ddl_splitter in ddl:
+            spec, body = ddl.split(ddl_splitter, 1)
             spec += ddl_splitter  # add the splitter back to the end of the spec
         else:
-            spec = dll  # If we can't split, just use the whole DDL as spec and leave body empty
+            spec = ddl  # If we can't split, just use the whole DDL as spec and leave body empty
             body = ""
 
         packages[package_name] = Package(

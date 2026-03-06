@@ -26,15 +26,15 @@ The following objects are fully supported for Oracle databases:
 - [x] Views
 - [x] Materialized Views
 - [x] Indexes
-- [ ] Sequences
-- [ ] Functions
+- [x] Sequences
+- [x] Functions
 - [x] Triggers
-- [ ] Stored Procedures
-- [ ] Custom Types
-- [ ] Constraints
-- [ ] Directories
-- [ ] Packages/Packages Bodies
-- [ ] Synonyms
+- [x] Stored Procedures
+- [x] Custom Types
+- [x] Constraints
+- [x] Directories
+- [x] Packages/Packages Bodies
+- [x] Synonyms
 - [x] Editions
 - [x] Mining Models
 - [x] Custom Operators
