@@ -18,6 +18,7 @@ A command-line tool to visualize the differences between two DB states.
 - [Examples](#examples)
 - [Options](#options)
   - [Supported DBMS Types](#supported-dbms-types)
+- [Oracle Support Status](#oracle-support-status)
 - [Troubleshooting](#troubleshooting)
   - [Common Issues](#common-issues)
   - [Getting Help](#getting-help)
@@ -87,9 +88,19 @@ db-drift --version
 
 Currently supported database management systems:
 - `sqlite` - SQLite databases
-- `oracle` - Oracle databases
+- `oracle` - Oracle databases (in active development)
 
 *Note: Support for PostgreSQL and MySQL is planned for future releases.*
+
+## Oracle Support Status
+
+Oracle support is available and actively evolving. The project can compare many Oracle object
+types today, but support is not yet considered end-to-end across all Oracle features and
+environments.
+
+For the current scope, caveats, and examples, see
+[`docs/oracle-support.md`](docs/oracle-support.md) and
+[`docs/supported-db-objects.md`](docs/supported-db-objects.md).
 
 ## Troubleshooting
 
