@@ -7,6 +7,40 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 <!-- insertion marker -->
 
+## v1.4.1 (2026-03-06)
+
+### Bug Fixes
+
+- **oracle**: Correct a query to match the right records on join, avoid sql injection in another
+  query and minor typo on a variable
+  ([`ed42cb2`](https://github.com/dyka3773/db-drift/commit/ed42cb25c66c430c4845636a72074d90b9a85716))
+
+- **oracle**: Fix how constraints are fetched so that COLUMN_NAME is always fetched
+  ([`7f93bbd`](https://github.com/dyka3773/db-drift/commit/7f93bbd90d53a212cb407ed437b3f1d7314f4ef2))
+
+- **oracle**: Fix minor typo in a variable name and add some docs regarding the supported objects
+  ([`ddba4b5`](https://github.com/dyka3773/db-drift/commit/ddba4b55597323c8bf35069cedbbd36ebd1d7f76))
+
+- **oracle**: Fix various type inconsistencies
+  ([`178540f`](https://github.com/dyka3773/db-drift/commit/178540f1aaebf4ed70e3b3e9d1a92ede22793102))
+
+### Documentation
+
+- **oracle**: Document the logic behind empty string bodies
+  ([`75d5a61`](https://github.com/dyka3773/db-drift/commit/75d5a61155e6bdaf437964e317f34c0a27da3f68))
+
+### Performance Improvements
+
+- **oracle**: Add a more robust algorithm for hashing code text
+  ([`275d7f5`](https://github.com/dyka3773/db-drift/commit/275d7f5fd63a55236e05483aa9edd35eb653c9c7))
+
+### Refactoring
+
+- Change the DBConstraintTypeEnum to be forward compatible for when the report is going to be
+  generated
+  ([`df86e73`](https://github.com/dyka3773/db-drift/commit/df86e73cef85f570019bd83334945e1b960a96ee))
+
+
 ## v1.4.0 (2026-03-04)
 
 ### Bug Fixes
