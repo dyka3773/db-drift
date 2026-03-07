@@ -1,6 +1,6 @@
 [project]
 name = "db-drift"
-version = "1.4.1"
+version = "1.5.0"
 description = "A command line tool to visualize the differences between two DB states."
 readme = "README.md"
 authors = [
