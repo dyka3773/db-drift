@@ -50,7 +50,7 @@ dev = [
     "build==1.4.0",
     "pytest==9.0.2",
     "python-semantic-release==10.5.3",
-    "tox==4.49.0",
+    "tox==4.49.1",
     "twine==6.2.0",
 ]
 
