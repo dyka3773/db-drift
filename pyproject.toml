@@ -65,7 +65,7 @@ pythonpath = ["src"]
 # build_command = "pip install build && python -m build" # Old build command
 build_command = """
     python -m pip install uv
-    uv lock --upgrade-package backend
+    uv lock --upgrade-package db-drift
     git add uv.lock
     uv build
 """ # New build command with uv lock upgrade
