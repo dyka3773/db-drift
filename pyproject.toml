@@ -47,15 +47,15 @@ db-drift = "db_drift:main"
 
 [dependency-groups]
 dev = [
-    "build==1.4.0",
+    "build==1.4.2",
     "pytest==9.0.2",
     "python-semantic-release==10.5.3",
-    "tox==4.49.1",
+    "tox==4.51.0",
     "twine==6.2.0",
 ]
 
 [build-system]
-requires = ["uv_build>=0.10.8,<0.11.0"]
+requires = ["uv_build>=0.10.8,<0.12.0"]
 build-backend = "uv_build"
 
 [tool.pytest.ini_options]
