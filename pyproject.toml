@@ -34,7 +34,7 @@ dependencies = [
     "pymysql==1.1.2",
     "python-dotenv==1.2.2",
     "pyyaml==6.0.3",
-    "sqlmodel==0.0.37",
+    "sqlmodel==0.0.38",
     "sshtunnel==0.4.0",
 ]
 
@@ -47,10 +47,10 @@ db-drift = "db_drift:main"
 
 [dependency-groups]
 dev = [
-    "build==1.4.2",
-    "pytest==9.0.2",
+    "build==1.4.3",
+    "pytest==9.0.3",
     "python-semantic-release==10.5.3",
-    "tox==4.51.0",
+    "tox==4.52.1",
     "twine==6.2.0",
 ]
 
@@ -106,7 +106,7 @@ env_list = ["lint", "3.10", "3.11", "3.12", "3.13", "3.14"]
 [tool.tox.env_run_base]
 description = "Run tests with the current Python version"
 deps = [
-    "pytest==9.0.2",
+    "pytest==9.0.3",
 ]
 commands = [[ "pytest", "-v" ]]
 
