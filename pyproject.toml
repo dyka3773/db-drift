@@ -48,7 +48,7 @@ db-drift = "db_drift:main"
 [dependency-groups]
 dev = [
     "build==1.5.0",
-    "pytest==9.1.0",
+    "pytest==9.1.1",
     "python-semantic-release==10.5.3",
     "tox==4.55.1",
     "twine==6.2.0",
@@ -106,7 +106,7 @@ env_list = ["lint", "3.10", "3.11", "3.12", "3.13", "3.14"]
 [tool.tox.env_run_base]
 description = "Run tests with the current Python version"
 deps = [
-    "pytest==9.1.0",
+    "pytest==9.1.1",
 ]
 commands = [[ "pytest", "-v" ]]
 
