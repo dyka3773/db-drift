@@ -29,7 +29,7 @@ classifiers = [
     "Typing :: Typed",
 ]
 dependencies = [
-    "oracledb==4.0.1",
+    "oracledb==4.0.2",
     "psycopg[binary]==3.3.4",
     "pymysql==1.2.0",
     "python-dotenv==1.2.2",
@@ -50,7 +50,7 @@ dev = [
     "build==1.5.1",
     "pytest==9.1.1",
     "python-semantic-release==10.6.1",
-    "tox==4.56.4",
+    "tox==4.57.0",
     "twine==6.2.0",
 ]
 
