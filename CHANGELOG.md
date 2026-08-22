@@ -7,6 +7,17 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 <!-- insertion marker -->
 
+## v1.5.1 (2026-08-22)
+
+### Chores
+
+- Change upgrade package from backend to db-drift
+  ([`4551b4f`](https://github.com/dyka3773/db-drift/commit/4551b4fde644d5d121569b973c72eed10891e45e))
+
+- **deps**: Bump requests in the uv group across 1 directory
+  ([`c61a75f`](https://github.com/dyka3773/db-drift/commit/c61a75f4dc23a38f5dc44542bb9879b2ea8064c2))
+
+
 ## v1.5.0 (2026-03-07)
 
 ### Documentation
