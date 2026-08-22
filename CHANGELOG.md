@@ -7,6 +7,45 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 <!-- insertion marker -->
 
+## v1.5.0 (2026-03-07)
+
+### Documentation
+
+- **oracle**: Added Document Oracle support
+  ([`c6dd9f1`](https://github.com/dyka3773/db-drift/commit/c6dd9f14b3e0d8e5103480e51790bfbe28489399))
+
+- **sqlite**: Remove objects that cannot be supported
+  ([`3a04e31`](https://github.com/dyka3773/db-drift/commit/3a04e31d198abe13c1a92d8eb225475975dd3c72))
+
+### Features
+
+- **sqlite**: Add support for index extraction
+  ([`072f1e0`](https://github.com/dyka3773/db-drift/commit/072f1e0ed4808d26b5dc75e69c8d9ef77e7e87d6))
+
+- **sqlite**: Add support for trigger exporting
+  ([`a75f89a`](https://github.com/dyka3773/db-drift/commit/a75f89a12b60385fc6ce338cc7ef5a8346469056))
+
+- **sqlite**: Add support for Views and Tables extraction
+  ([`b046986`](https://github.com/dyka3773/db-drift/commit/b046986b4e6d83b36ec267ee4a99a0ace4e3b189))
+
+### Refactoring
+
+- **sqlite**: Changed the way some models are imported and added pydoc in teh generic function that
+  returns table or view structure
+  ([`abb75e4`](https://github.com/dyka3773/db-drift/commit/abb75e42446009ce7107a8a4c0e17a6f749048fa))
+
+### Testing
+
+- **sqlite**: Add some minor sqlite tests and begin testing in general
+  ([`30fc2d8`](https://github.com/dyka3773/db-drift/commit/30fc2d8d87d4fac6202b32496e5e08fa5a84427e))
+
+- **sqlite**: Add testing for index extraction
+  ([`a4799c6`](https://github.com/dyka3773/db-drift/commit/a4799c66b53cc4fca8d593903dc9be66359e43f6))
+
+- **sqlite**: Add tests for tables and views
+  ([`aa7f724`](https://github.com/dyka3773/db-drift/commit/aa7f7243138b0c59956bd48e5425ac27d7fad0d4))
+
+
 ## v1.4.1 (2026-03-06)
 
 ### Bug Fixes
