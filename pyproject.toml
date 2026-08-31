@@ -47,10 +47,10 @@ db-drift = "db_drift:main"
 
 [dependency-groups]
 dev = [
-    "build==1.5.1",
+    "build==1.6.0",
     "pytest==9.1.1",
     "python-semantic-release==10.6.1",
-    "tox==4.60.0",
+    "tox==4.60.1",
     "twine==7.0.0",
 ]
 
