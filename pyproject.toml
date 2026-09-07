@@ -30,11 +30,11 @@ classifiers = [
 ]
 dependencies = [
     "oracledb==4.0.2",
-    "psycopg[binary]==3.3.4",
+    "psycopg[binary]==3.3.5",
     "pymysql==1.2.0",
     "python-dotenv==1.2.3",
     "pyyaml==6.0.3",
-    "sqlmodel==0.0.39",
+    "sqlmodel==0.0.42",
     "sshtunnel==0.4.0",
 ]
 
@@ -47,10 +47,10 @@ db-drift = "db_drift:main"
 
 [dependency-groups]
 dev = [
-    "build==1.5.1",
+    "build==1.6.0",
     "pytest==9.1.1",
-    "python-semantic-release==10.6.1",
-    "tox==4.60.0",
+    "python-semantic-release==10.6.2",
+    "tox==4.61.2",
     "twine==7.0.0",
 ]
 
