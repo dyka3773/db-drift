@@ -32,9 +32,9 @@ dependencies = [
     "oracledb==26.0.1",
     "psycopg[binary]==3.3.6",
     "pymysql==1.2.3",
-    "python-dotenv==1.2.3",
+    "python-dotenv==1.2.4",
     "pyyaml==6.0.3",
-    "sqlmodel==0.0.47",
+    "sqlmodel==0.0.48",
     "sshtunnel==0.4.0",
 ]
 
@@ -50,7 +50,7 @@ dev = [
     "build==1.6.1",
     "pytest==9.1.1",
     "python-semantic-release==10.7.0",
-    "tox==4.64.2",
+    "tox==4.64.10",
     "twine==7.0.0",
 ]
 
