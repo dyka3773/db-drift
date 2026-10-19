@@ -379,7 +379,7 @@ requires-dist = [
     { name = "python-dotenv", specifier = "==1.2.4" },
     { name = "pyyaml", specifier = "==6.0.3" },
     { name = "sqlmodel", specifier = "==0.0.48" },
-    { name = "sshtunnel", specifier = "==0.4.0" },
+    { name = "sshtunnel", specifier = "==0.5.1" },
 ]
 
 [package.metadata.requires-dev]
@@ -387,7 +387,7 @@ dev = [
     { name = "build", specifier = "==1.6.1" },
     { name = "pytest", specifier = "==9.1.1" },
     { name = "python-semantic-release", specifier = "==10.7.0" },
-    { name = "tox", specifier = "==4.64.10" },
+    { name = "tox", specifier = "==4.65.0" },
     { name = "twine", specifier = "==7.0.0" },
 ]
 
@@ -1435,14 +1435,14 @@ wheels = [
 
 [[package]]
 name = "sshtunnel"
-version = "0.4.0"
+version = "0.5.1"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
     { name = "paramiko" },
 ]
-sdist = { url = "https://files.pythonhosted.org/packages/8d/ad/4c587adf79865be268ee0b6bd52cfaa7a75d827a23ced072dc5ab554b4af/sshtunnel-0.4.0.tar.gz", hash = "sha256:e7cb0ea774db81bf91844db22de72a40aae8f7b0f9bb9ba0f666d474ef6bf9fc", size = 62716, upload-time = "2021-01-11T13:26:32.975Z" }
+sdist = { url = "https://files.pythonhosted.org/packages/27/31/03d5a93a1f8a3bdc40d669d95e3b2b95f1f9df65f1b9cfdb9c44ba5c233f/sshtunnel-0.5.1.tar.gz", hash = "sha256:b7628901e34a297a1a754d136e5e1262cfdef1c3e0a19f75474457ffb49d6838", size = 60398, upload-time = "2026-10-09T10:35:19.062Z" }
 wheels = [
-    { url = "https://files.pythonhosted.org/packages/58/13/8476c4328dcadfe26f8bd7f3a1a03bf9ddb890a7e7b692f54a179bc525bf/sshtunnel-0.4.0-py2.py3-none-any.whl", hash = "sha256:98e54c26f726ab8bd42b47a3a21fca5c3e60f58956f0f70de2fb8ab0046d0606", size = 24729, upload-time = "2021-01-11T13:26:29.969Z" },
+    { url = "https://files.pythonhosted.org/packages/7a/a7/09ed260dace9ecfd8a7ab4f2197540ae5edb5596dffd17b5d0d0051c516c/sshtunnel-0.5.1-py2.py3-none-any.whl", hash = "sha256:96a79e2edcbab6d30da7d95a405ffa3489c412f1ba0fe9a96d0804b586372d5b", size = 25320, upload-time = "2026-10-09T10:35:18.074Z" },
 ]
 
 [[package]]
@@ -1519,7 +1519,7 @@ wheels = [
 
 [[package]]
 name = "tox"
-version = "4.64.10"
+version = "4.65.0"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
     { name = "cachetools" },
@@ -1535,9 +1535,9 @@ dependencies = [
     { name = "typing-extensions", marker = "python_full_version < '3.13'" },
     { name = "virtualenv" },
 ]
-sdist = { url = "https://files.pythonhosted.org/packages/cd/be/9a8d33841569fa73f998d22dfd4b614427072e7cb88cd14951670d9402d5/tox-4.64.10.tar.gz", hash = "sha256:7482b96fefe1e4b49e406a9a62b25b415690bec2cebe9cc0cd59e38af88ce671", size = 332282, upload-time = "2026-10-08T18:00:29.921Z" }
+sdist = { url = "https://files.pythonhosted.org/packages/41/05/a79f2c293f5b5b2188978b4e8b60d12c64277662de1254184769f3e96571/tox-4.65.0.tar.gz", hash = "sha256:582c4adba07b8fbeca1454b528a512dfc66c19635154289c7032555dbc72d56c", size = 333143, upload-time = "2026-10-09T20:33:09.306Z" }
 wheels = [
-    { url = "https://files.pythonhosted.org/packages/f6/b5/18850155b4962a2f70cf1be47c91bf96ea83622c7b7ba45281d2f7e80725/tox-4.64.10-py3-none-any.whl", hash = "sha256:9f0bd51c4fe770b682d0c9540842efc07bd98c302cc327986201169e319de669", size = 237938, upload-time = "2026-10-08T18:00:28.39Z" },
+    { url = "https://files.pythonhosted.org/packages/e0/1a/3408ad74ac353c519f7a38fbe35fe107b5fbeaa55539f189c19d0726f14c/tox-4.65.0-py3-none-any.whl", hash = "sha256:823ea3df020d7ede8f5df6ba4f374585063b39aa86140c098fbb97833543844e", size = 238074, upload-time = "2026-10-09T20:33:07.366Z" },
 ]
 
 [[package]]
