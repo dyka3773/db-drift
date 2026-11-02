@@ -29,7 +29,7 @@ classifiers = [
     "Typing :: Typed",
 ]
 dependencies = [
-    "oracledb==26.0.1",
+    "oracledb==26.1.0",
     "psycopg[binary]==3.3.6",
     "pymysql==1.2.3",
     "python-dotenv==1.2.4",
@@ -48,7 +48,7 @@ db-drift = "db_drift:main"
 [dependency-groups]
 dev = [
     "build==1.6.1",
-    "pytest==9.1.1",
+    "pytest==9.2.0",
     "python-semantic-release==10.7.0",
     "tox==4.65.0",
     "twine==7.0.0",
@@ -106,7 +106,7 @@ env_list = ["lint", "3.10", "3.11", "3.12", "3.13", "3.14"]
 [tool.tox.env_run_base]
 description = "Run tests with the current Python version"
 deps = [
-    "pytest==9.1.1",
+    "pytest==9.2.0",
 ]
 commands = [[ "pytest", "-v" ]]
 
