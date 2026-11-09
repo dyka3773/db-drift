@@ -30,7 +30,7 @@ classifiers = [
 ]
 dependencies = [
     "oracledb==26.1.0",
-    "psycopg[binary]==3.3.6",
+    "psycopg[binary]==3.3.8",
     "pymysql==1.2.3",
     "python-dotenv==1.2.4",
     "pyyaml==6.0.3",
