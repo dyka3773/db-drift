@@ -30,11 +30,11 @@ classifiers = [
 ]
 dependencies = [
     "oracledb==26.1.0",
-    "psycopg[binary]==3.3.8",
-    "pymysql==1.2.3",
+    "psycopg[binary]==3.3.9",
+    "pymysql==1.2.4",
     "python-dotenv==1.2.4",
     "pyyaml==6.0.3",
-    "sqlmodel==0.0.48",
+    "sqlmodel==0.0.49",
     "sshtunnel==0.5.1",
 ]
 
